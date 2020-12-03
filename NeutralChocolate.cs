@@ -1,17 +1,19 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace NeutralChocolate
 {
-    public class Game1 : Game
+    public class NeutralChocolate : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private SpriteFont font;
 
-        public Game1()
+        public NeutralChocolate()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -21,12 +23,13 @@ namespace NeutralChocolate
             // TODO: Add your initialization logic here
 
             base.Initialize();
+            font = Content.Load<SpriteFont>("gameFont");
+            Winder.Initialize(Window, font);
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -36,16 +39,21 @@ namespace NeutralChocolate
                 Exit();
 
             // TODO: Add your update logic here
+            var gamePadState = GamePad.GetState(PlayerIndex.One);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            var gamePadState = GamePad.GetState(PlayerIndex.One);
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
 
-            // TODO: Add your drawing code here
-
+            PadPrinter.Print(spriteBatch, font);
+            
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
