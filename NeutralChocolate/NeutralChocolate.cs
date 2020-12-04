@@ -98,7 +98,6 @@ namespace NeutralChocolate
             player.animations[1] = new AnimatedSprite(playerUp, 1, 4);
             player.animations[2] = new AnimatedSprite(playerLeft, 1, 4);
             player.animations[3] = new AnimatedSprite(playerRight, 1, 4);
-            player.anim = new AnimatedSprite(playerDown, 1, 4);
 
             MySounds.projectileSound = Content.Load<SoundEffect>("Sounds/blip");
             MySounds.bgmMusic = Content.Load<Song>("Sounds/nature");
@@ -112,8 +111,6 @@ namespace NeutralChocolate
 
 
             // if object ref not found, make sure you are pulling the latest tiled map version. 
-
-
             //  TiledMapObject[] allEnemies = myMap.GetLayer<TiledMapObjectLayer>("Monsters").Objects; 
             //  foreach (var en in allEnemies)
             //  {
@@ -126,8 +123,6 @@ namespace NeutralChocolate
             //          Enemy.enemies.Add(new Eye(en.Position));
             //  }
 
-
-
             // TiledMapObject[] allObstacles = myMap.GetLayer<TiledMapObjectLayer>("obstacles").Objects;
 
             // foreach (var obj in allObstacles)
@@ -139,10 +134,7 @@ namespace NeutralChocolate
             //         Obstacle.obstacles.Add(new Tree(obj.Position));
             //     else if (type == "Bush")
             //         Obstacle.obstacles.Add(new Bush(obj.Position));
-
             // }
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -152,11 +144,6 @@ namespace NeutralChocolate
 
             mapRenderer.Update(gameTime);
 
-            // TODO: Add your update logic here
-            // if (player.Health > 0)
-            // {
-
-            // }
             player.Update(gameTime, Winder.Width, Winder.Height);
             // //*****************************************************************
             // //              Camera logic
@@ -207,9 +194,10 @@ namespace NeutralChocolate
         {
             GraphicsDevice.Clear(Color.ForestGreen);
             mapRenderer.Draw(cam.GetViewMatrix()); //, cam.GetViewMatrix());
-            _spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); // can hijack sprite bach to house the camera information+
 
-            player.anim.Draw(_spriteBatch, new Vector2(player.Position.X - 48, player.Position.Y - 48)); // for the sprite center minus half the pixel size for X and Y
+            _spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); // can hijack sprite bach to house the camera information+
+            PadPrinter.Print(_spriteBatch, font);
+            player.Draw(_spriteBatch);
 
 
             foreach (Enemy en in Enemy.enemies)
@@ -229,19 +217,15 @@ namespace NeutralChocolate
                 }
 
                 _spriteBatch.Draw(spriteToDraw, new Vector2(en.Postion.X - rad, en.Postion.Y - rad), Color.White);
-
             }
-
 
             foreach (Projectile proj in Projectile.projectiles) //shooting projectiles
             {
                 _spriteBatch.Draw(bullet_Sprite, new Vector2(proj.Position.X - proj.Radius, proj.Position.Y - proj.Radius), Color.White); // - radius makes it center of sprite, 
             }
 
-
-
-
-            foreach (Projectile proj in Projectile.projectiles)  // nesting loop  for each projectile, run the enemy loop we can now compare teh projectile to eneymy for colision
+            // Projectile collision
+            foreach (Projectile proj in Projectile.projectiles)
             {
                 foreach (Enemy en in Enemy.enemies)
                 {
@@ -254,10 +238,7 @@ namespace NeutralChocolate
                 }
                 if (Obstacle.didCollide(proj.Position, proj.Radius))
                     proj.Collided = true;
-
             }
-
-
 
             foreach (Enemy en in Enemy.enemies) // Creating player damage
             {
@@ -271,37 +252,29 @@ namespace NeutralChocolate
                 if (player.Health <= 0)  // stops music on death
                 {
                     MediaPlayer.Stop();
-
-
                 }
             }
-
 
             Projectile.projectiles.RemoveAll(p => p.Collided);
             Enemy.enemies.RemoveAll(e => e.Health <= 0);
 
 
-             foreach (Obstacle o in Obstacle.obstacles)
-             {
-                 Texture2D spriteToDraw;
-                 if (o.GetType() == typeof(Tree))
-                     spriteToDraw = tree_Sprite;
-                 else
-                     spriteToDraw = bush_Sprite;
-                 _spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
+            foreach (Obstacle o in Obstacle.obstacles)
+            {
+                Texture2D spriteToDraw;
+                if (o.GetType() == typeof(Tree))
+                    spriteToDraw = tree_Sprite;
+                else
+                    spriteToDraw = bush_Sprite;
+                _spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
+            }
 
-             }
-            _spriteBatch.End();
-
-
-            _spriteBatch.Begin();
             for (int i = 0; i < player.Health; i++)
             {
                 _spriteBatch.Draw(heart_Sprite, new Vector2(i * 63, 0), Color.White);
             }
+
             _spriteBatch.End();
-
-
             base.Draw(gameTime);
         }
     }

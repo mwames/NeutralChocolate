@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace NeutralChocolate
 {
@@ -15,10 +11,7 @@ namespace NeutralChocolate
 
         public static List<Obstacle> obstacles = new List<Obstacle>();
 
-        public Vector2 HitPos => hitPos; // different syntax handles basic get and set.
-        //{
-          //  get { return hitPos; }
-      // }
+        public Vector2 HitPos => hitPos;
 
         public Vector2 Position
         {
