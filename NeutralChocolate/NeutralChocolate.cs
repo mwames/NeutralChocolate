@@ -5,6 +5,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Tiled.Renderers;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using MonoGame.Extended.Tiled;
 
 namespace NeutralChocolate
 {
@@ -42,6 +43,7 @@ namespace NeutralChocolate
         Texture2D bullet_Sprite;
 
         TiledMapRenderer mapRenderer;
+        TiledMap myMap;
 
         OrthographicCamera cam;
 
@@ -89,8 +91,8 @@ namespace NeutralChocolate
 
             bullet_Sprite = Content.Load<Texture2D>("Misc/bullet");
             heart_Sprite = Content.Load<Texture2D>("Misc/heart");
-            //myMap = Content.Load<TiledMap>("Misc/Test3");
-            //mapRenderer.LoadMap(myMap);
+            myMap = Content.Load<TiledMap>("Misc/Test2");
+            mapRenderer.LoadMap(myMap);
 
 
             // these are ordered in the same way as the enum up top to condense animation code on player class
@@ -104,37 +106,37 @@ namespace NeutralChocolate
             MediaPlayer.Play(MySounds.bgmMusic);
 
 
-            Enemy.enemies.Add(new Snake(new Vector2(500, 200))); // you can use this to test if your classes and such work. Not normally good practice except for testing.
-            Enemy.enemies.Add(new Eye(new Vector2(450, 400)));
-            Obstacle.obstacles.Add(new Tree(new Vector2(174, 200)));
-            Obstacle.obstacles.Add(new Bush(new Vector2(600, 300)));
+            // Enemy.enemies.Add(new Snake(new Vector2(500, 200))); // you can use this to test if your classes and such work. Not normally good practice except for testing.
+            // Enemy.enemies.Add(new Eye(new Vector2(450, 400)));
+            // Obstacle.obstacles.Add(new Tree(new Vector2(174, 200)));
+            // Obstacle.obstacles.Add(new Bush(new Vector2(600, 300)));
 
 
-            // if object ref not found, make sure you are pulling the latest tiled map version. 
-            //  TiledMapObject[] allEnemies = myMap.GetLayer<TiledMapObjectLayer>("Monsters").Objects; 
-            //  foreach (var en in allEnemies)
-            //  {
-            //      string type;
-            //      en.Properties.TryGetValue("Type", out type);
+            //if object ref not found, make sure you are pulling the latest tiled map version. 
+             TiledMapObject[] allEnemies = myMap.GetLayer<TiledMapObjectLayer>("Monsters").Objects; 
+             foreach (var en in allEnemies)
+             {
+                 string type;
+                 en.Properties.TryGetValue("Type", out type);
 
-            //      if (type == "Snake")
-            //          Enemy.enemies.Add(new Snake(en.Position));
-            //      else if (type == "Eye")
-            //          Enemy.enemies.Add(new Eye(en.Position));
-            //  }
+                 if (type == "Snake")
+                     Enemy.enemies.Add(new Snake(en.Position));
+                 else if (type == "Eye")
+                     Enemy.enemies.Add(new Eye(en.Position));
+             }
 
-            // TiledMapObject[] allObstacles = myMap.GetLayer<TiledMapObjectLayer>("obstacles").Objects;
+            TiledMapObject[] allObstacles = myMap.GetLayer<TiledMapObjectLayer>("obstacles").Objects;
 
-            // foreach (var obj in allObstacles)
-            // {
-            //     string type;
-            //     obj.Properties.TryGetValue("Type", out type);
+            foreach (var obj in allObstacles)
+            {
+                string type;
+                obj.Properties.TryGetValue("Type", out type);
 
-            //     if (type == "Tree")
-            //         Obstacle.obstacles.Add(new Tree(obj.Position));
-            //     else if (type == "Bush")
-            //         Obstacle.obstacles.Add(new Bush(obj.Position));
-            // }
+                if (type == "Tree")
+                    Obstacle.obstacles.Add(new Tree(obj.Position));
+                else if (type == "Bush")
+                    Obstacle.obstacles.Add(new Bush(obj.Position));
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -145,38 +147,38 @@ namespace NeutralChocolate
             mapRenderer.Update(gameTime);
 
             player.Update(gameTime, Winder.Width, Winder.Height);
-            // //*****************************************************************
-            // //              Camera logic
-            //             float tempX = player.Position.X;
-            //             float tempY = player.Position.Y;
-            //             int camW = _graphics.PreferredBackBufferWidth;
-            //             int camH = _graphics.PreferredBackBufferHeight;
-            //             int mapW = myMap.WidthInPixels;  
-            //             int mapH = myMap.HeightInPixels;
+            //*****************************************************************
+            //              Camera logic
+                        float tempX = player.Position.X;
+                        float tempY = player.Position.Y;
+                        int camW = _graphics.PreferredBackBufferWidth;
+                        int camH = _graphics.PreferredBackBufferHeight;
+                        int mapW = myMap.WidthInPixels;  
+                        int mapH = myMap.HeightInPixels;
 
-            //             if (tempX <camW /2)
-            //             {
-            //                 tempX = camW / 2;
-            //             }    
+                        if (tempX <camW /2)
+                        {
+                            tempX = camW / 2;
+                        }    
 
-            //             if (tempY < camH /2)
-            //             {
-            //                 tempY = camH / 2;
-            //             }
+                        if (tempY < camH /2)
+                        {
+                            tempY = camH / 2;
+                        }
 
-            //              if (tempX > (mapW -(camW/2)))
-            //                  {
-            //                  tempX = (mapW - (camW / 2));
-            //              }
+                         if (tempX > (mapW -(camW/2)))
+                             {
+                             tempX = (mapW - (camW / 2));
+                         }
 
-            //              if (tempY > (mapH -(camH /2)))
-            //              {
-            //                  tempY = (mapH - (camH / 2));
-            //              }
+                         if (tempY > (mapH -(camH /2)))
+                         {
+                             tempY = (mapH - (camH / 2));
+                         }
 
-            //             cam.LookAt(new Vector2(tempX,tempY)); // add to focus around player, and locks it to map, 
-            //             //cam.LookAt(player.Position); generic look at map
-            // //****************************************************************
+                        cam.LookAt(new Vector2(tempX,tempY)); // add to focus around player, and locks it to map, 
+                        //cam.LookAt(player.Position); generic look at map
+            //****************************************************************
             foreach (Projectile proj in Projectile.projectiles) // goes through every elemeent in the projectile list and referes to it as proj the current projectile
             {
                 proj.Update(gameTime);

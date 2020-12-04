@@ -4,3 +4,4 @@ build a in game menu for the character.
 build town, and large area
 organize the game like breakout or new and improve way
 get boss monster
+Npc with chat box( npc movement optional)

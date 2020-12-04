@@ -10,6 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\bin\Debug\netcoreapp3.1\MonoGame.Extended.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -79,6 +80,11 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Misc/rpgTiles.png
+
+#begin Misc/Test2.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Misc/Test2.tmx
 
 #begin Obsticales/bush.png
 /importer:TextureImporter
