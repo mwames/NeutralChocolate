@@ -24,8 +24,8 @@ namespace NeutralChocolate
     }
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
         private SpriteFont font;
 
         Texture2D player_Sprite;
@@ -51,7 +51,7 @@ namespace NeutralChocolate
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -59,12 +59,12 @@ namespace NeutralChocolate
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _graphics.PreferredBackBufferWidth = 1280;  //GraphicsDevice.DisplayMode.Width;
-            _graphics.PreferredBackBufferHeight = 720; //GraphicsDevice.DisplayMode.Height;
-            //_graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 1280;  //GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = 720; //GraphicsDevice.DisplayMode.Height;
+            //graphics.IsFullScreen = true;
             mapRenderer = new TiledMapRenderer(GraphicsDevice);
             cam = new OrthographicCamera(GraphicsDevice);
-            _graphics.ApplyChanges();
+            graphics.ApplyChanges();
             player = new Player();
 
 
@@ -75,7 +75,7 @@ namespace NeutralChocolate
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             player_Sprite = Content.Load<Texture2D>("Player/player");
             playerDown = Content.Load<Texture2D>("Player/playerDown");
@@ -151,8 +151,8 @@ namespace NeutralChocolate
             //              Camera logic
                         float tempX = player.Position.X;
                         float tempY = player.Position.Y;
-                        int camW = _graphics.PreferredBackBufferWidth;
-                        int camH = _graphics.PreferredBackBufferHeight;
+                        int camW = graphics.PreferredBackBufferWidth;
+                        int camH = graphics.PreferredBackBufferHeight;
                         int mapW = myMap.WidthInPixels;  
                         int mapH = myMap.HeightInPixels;
 
@@ -167,7 +167,7 @@ namespace NeutralChocolate
                         }
 
                          if (tempX > (mapW -(camW/2)))
-                             {
+                         {
                              tempX = (mapW - (camW / 2));
                          }
 
@@ -196,11 +196,11 @@ namespace NeutralChocolate
         {
             GraphicsDevice.Clear(Color.ForestGreen);
             mapRenderer.Draw(cam.GetViewMatrix()); //, cam.GetViewMatrix());
-
-            _spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); // can hijack sprite bach to house the camera information+
-            PadPrinter.Print(_spriteBatch, font);
-            player.Draw(_spriteBatch);
-
+            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); // can hijack sprite bach to house the camera information+
+            
+            
+            if (player.Health > 0)
+                player.anim.Draw(spriteBatch, new Vector2(player.Position.X - 48, player.Position.Y - 48)); // for the sprite center minus half the pixel size for X and Y
 
             foreach (Enemy en in Enemy.enemies)
             {
@@ -218,12 +218,12 @@ namespace NeutralChocolate
                     rad = 73;
                 }
 
-                _spriteBatch.Draw(spriteToDraw, new Vector2(en.Postion.X - rad, en.Postion.Y - rad), Color.White);
+                spriteBatch.Draw(spriteToDraw, new Vector2(en.Postion.X - rad, en.Postion.Y - rad), Color.White);
             }
 
             foreach (Projectile proj in Projectile.projectiles) //shooting projectiles
             {
-                _spriteBatch.Draw(bullet_Sprite, new Vector2(proj.Position.X - proj.Radius, proj.Position.Y - proj.Radius), Color.White); // - radius makes it center of sprite, 
+                spriteBatch.Draw(bullet_Sprite, new Vector2(proj.Position.X - proj.Radius, proj.Position.Y - proj.Radius), Color.White); // - radius makes it center of sprite, 
             }
 
             // Projectile collision
@@ -268,15 +268,18 @@ namespace NeutralChocolate
                     spriteToDraw = tree_Sprite;
                 else
                     spriteToDraw = bush_Sprite;
-                _spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
+                spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
             }
+            spriteBatch.End();
 
+            spriteBatch.Begin(); // use this section to keep heath or such locked on screen for camera
+            PadPrinter.Print(spriteBatch, font);
             for (int i = 0; i < player.Health; i++)
             {
-                _spriteBatch.Draw(heart_Sprite, new Vector2(i * 63, 0), Color.White);
+                spriteBatch.Draw(heart_Sprite, new Vector2(i * 63, 0), Color.White);
             }
 
-            _spriteBatch.End();
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

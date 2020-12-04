@@ -10,16 +10,12 @@ namespace NeutralChocolate
         private int health = 5;
         private int speed = 300;
         private Dir direction = Dir.Down;
+        private bool isMoving = false;
         private int radius = 56;
         private float healthTimer = 0f;
-        public bool isMoving = false;
         private KeyboardState kStateOld = Keyboard.GetState();
+        public AnimatedSprite anim;
         public AnimatedSprite[] animations = new AnimatedSprite[4];
-        private AnimatedSprite Animation => animations[(int)direction];
-        private GamePadState gPrevious;
-        private GamePadState gCurrent;
-        private KeyboardState kPrevious;
-        private KeyboardState kCurrent;
 
 
         public float HealthTimer
@@ -30,12 +26,12 @@ namespace NeutralChocolate
         public int Radius
         {
             get { return radius; }
-
+            
         }
         public int Health
         {
             get { return health; }
-            set { health = value; }
+            set {health = value;}
         }
 
         public Vector2 Position
@@ -53,115 +49,133 @@ namespace NeutralChocolate
             position.Y = newY;
         }
 
-        private bool WasPressed(Buttons button)
+        public void Update(GameTime gameTime, int mapW,int mapH)
         {
-            return gCurrent.IsButtonDown(button) && !gPrevious.IsButtonDown(button);
-        }
-
-        private bool IsPressed(Buttons button)
-        {
-            return gCurrent.IsButtonDown(button);
-        }
-
-        private bool WasPressed(Keys key)
-        {
-            return kCurrent.IsKeyDown(key) && !kPrevious.IsKeyDown(key);
-        }
-
-        private bool IsPressed(Keys key)
-        {
-            return kCurrent.IsKeyDown(key);
-        }
-
-        private void Move(Dir direction, float distance)
-        {
-            isMoving = true;
-
-            var temp = position;
-            if (direction == Dir.Up)
-            {
-                temp.Y -= distance;
-            }
-            if (direction == Dir.Down)
-            {
-                temp.Y += distance;
-            }
-            if (direction == Dir.Left)
-            {
-                temp.X -= distance;
-            }
-            if (direction == Dir.Right)
-            {
-                temp.X += distance;
-            }
-            if (!Obstacle.didCollide(temp, radius) && temp.Y > radius)
-            {
-                position = temp;
-            }
-        }
-
-        private void Shoot(Dir direction)
-        {
-            Projectile.projectiles.Add(new Projectile(position, direction));
-            MySounds.projectileSound.Play();
-        }
-
-        public void Update(GameTime gameTime, int mapW, int mapH)
-        {
+            KeyboardState kState = Keyboard.GetState();
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (healthTimer > 0)
                 healthTimer -= dt;
 
-            gPrevious = gCurrent;
-            gCurrent = GamePad.GetState(PlayerIndex.One);
+            /*   using a switch statement instead of using enum example. 
+             switch (direction)
+            {
+                case Dir.Down:
+                    anim = animations[0];
+                    break;
+                case Dir.Up:
+                    anim = animations[1];
+                    break;
+                case Dir.Left:
+                    anim = animations[2];
+                    break;
+                case Dir.Right:
+                    anim = animations[3];
+                    break;
+                default:
+                    break;
+            }
+            */
 
-            kPrevious = kCurrent;
-            kCurrent = Keyboard.GetState();
+            // enum example. 
+            anim = animations[(int)direction];
 
-            isMoving = false;
-            var tempPos = position;
-            var distanceToTravel = speed * dt;
-            if (IsPressed(Buttons.LeftThumbstickUp) || IsPressed(Keys.Up))
-                Move(Dir.Up, distanceToTravel);
-
-            if (IsPressed(Buttons.LeftThumbstickDown) || IsPressed(Keys.Down))
-                Move(Dir.Down, distanceToTravel);
-
-            if (IsPressed(Buttons.LeftThumbstickLeft) || IsPressed(Keys.Left))
-                Move(Dir.Left, distanceToTravel);
-
-            if (IsPressed(Buttons.LeftThumbstickRight) || IsPressed(Keys.Right))
-                Move(Dir.Right, distanceToTravel);
 
             if (isMoving)
+                anim.Update(gameTime);
+            else anim.setFrame(1) ;
+
+            isMoving = false;
+
+            if (kState.IsKeyDown(Keys.Right))
             {
-                Animation.Update(gameTime);
+                direction = Dir.Right;
+                //position.X += speed * dt;
+                isMoving = true;
             }
-            else
+            if (kState.IsKeyDown(Keys.Left))
+
             {
-                Animation.setFrame(1);
+                direction = Dir.Left;
+               // position.X -= speed * dt;
+                isMoving = true;
             }
 
-            if (WasPressed(Keys.Space))
-                Shoot(direction);
+            if (kState.IsKeyDown(Keys.Up))
+            {
+               direction = Dir.Up;
+               // position.Y -= speed * dt;
+                isMoving = true;
 
-            if (WasPressed(Buttons.Y))
-                Shoot(Dir.Up);
+            }
 
-            if (WasPressed(Buttons.A))
-                Shoot(Dir.Down);
+            if (kState.IsKeyDown(Keys.Down))
+            {
+                direction = Dir.Down;
+               // position.Y += speed * dt;
+                isMoving = true;
+            }
+            if (isMoving)
 
-            if (WasPressed(Buttons.X))
-                Shoot(Dir.Left);
+            {
+                Vector2 tempPos = position;
+                switch (direction)
+                {
+                    case Dir.Right:
 
-            if (WasPressed(Buttons.B))
-                Shoot(Dir.Right);
-        }
+                        tempPos.X += speed * dt;
+                        if (!Obstacle.didCollide(tempPos, radius)&& tempPos.X <mapW - radius)
+                        { 
+                            position.X += speed * dt;
+                            
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            Animation.Draw(spriteBatch, new Vector2(Position.X - 48, Position.Y - 48));
+                        }
+                        break;
+
+                    case Dir.Left:
+                        tempPos.X -= speed * dt;
+                        if (!Obstacle.didCollide(tempPos, radius) && tempPos.X > radius)
+
+                        {
+                            position.X -= speed * dt;
+                            
+
+                        }
+
+                        break;
+
+                    case Dir.Down:
+                         tempPos.Y += speed * dt;
+                        if (!Obstacle.didCollide(tempPos, radius) && tempPos.Y <mapH - radius)
+                        {
+                            position.Y += speed * dt;
+                            
+
+                        }
+                        break;
+
+                    case Dir.Up:
+                        tempPos.Y -= speed * dt;
+                        if (!Obstacle.didCollide(tempPos, radius) && tempPos.Y > radius )
+                        {
+                            position.Y -= speed * dt;
+                          
+
+
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
+            if (kState.IsKeyDown(Keys.Space)&& kStateOld.IsKeyUp(Keys.Space))
+            {
+                Projectile.projectiles.Add(new Projectile(position,direction));
+                MySounds.projectileSound.Play();
+            }
+            kStateOld = kState;
         }
 
     }
