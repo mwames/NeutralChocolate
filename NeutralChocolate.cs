@@ -281,16 +281,16 @@ namespace NeutralChocolate
             Enemy.enemies.RemoveAll(e => e.Health <= 0);
 
 
-            // foreach (Obstacle o in Obstacle.obstacles)
-            // {
-            //     Texture2D spriteToDraw;
-            //     if (o.GetType() == typeof(Tree))
-            //         spriteToDraw = tree_Sprite;
-            //     else
-            //         spriteToDraw = bush_Sprite;
-            //     _spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
+             foreach (Obstacle o in Obstacle.obstacles)
+             {
+                 Texture2D spriteToDraw;
+                 if (o.GetType() == typeof(Tree))
+                     spriteToDraw = tree_Sprite;
+                 else
+                     spriteToDraw = bush_Sprite;
+                 _spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
 
-            // }
+             }
             _spriteBatch.End();
 
 
