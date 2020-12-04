@@ -1,17 +1,13 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
-using Microsoft.Xna.Framework.Audio; 
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
 namespace NeutralChocolate
 {
-    //public class NeutralChocolate : Game
-   // {
     enum Dir
     {
         Down,
@@ -29,7 +25,7 @@ namespace NeutralChocolate
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        
+        private SpriteFont font;
 
         Texture2D player_Sprite;
         Texture2D playerDown;
@@ -45,18 +41,11 @@ namespace NeutralChocolate
         Texture2D heart_Sprite;
         Texture2D bullet_Sprite;
 
-       
-        //TiledMap myMap;
         TiledMapRenderer mapRenderer;
 
         OrthographicCamera cam;
-        
 
-        
-        
-      
-
-        Player player = new Player();
+        Player player;
 
         public Game1()
         {
@@ -66,30 +55,25 @@ namespace NeutralChocolate
         }
 
         protected override void Initialize()
-
-         {
+        {
             // TODO: Add your initialization logic here
             _graphics.PreferredBackBufferWidth = 1280;  //GraphicsDevice.DisplayMode.Width;
             _graphics.PreferredBackBufferHeight = 720; //GraphicsDevice.DisplayMode.Height;
             //_graphics.IsFullScreen = true;
             mapRenderer = new TiledMapRenderer(GraphicsDevice);
-            
             cam = new OrthographicCamera(GraphicsDevice);
             _graphics.ApplyChanges();
-          
-            
+            player = new Player();
+
+
             base.Initialize();
-            //font = Content.Load<SpriteFont>("gameFont");
-            //Winder.Initialize(Window, font);
+            font = Content.Load<SpriteFont>("gameFont");
+            Winder.Initialize(Window, font);
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-            // each image file 
-
 
             player_Sprite = Content.Load<Texture2D>("Player/player");
             playerDown = Content.Load<Texture2D>("Player/playerDown");
@@ -114,17 +98,18 @@ namespace NeutralChocolate
             player.animations[1] = new AnimatedSprite(playerUp, 1, 4);
             player.animations[2] = new AnimatedSprite(playerLeft, 1, 4);
             player.animations[3] = new AnimatedSprite(playerRight, 1, 4);
+            player.anim = new AnimatedSprite(playerDown, 1, 4);
 
             MySounds.projectileSound = Content.Load<SoundEffect>("Sounds/blip");
             MySounds.bgmMusic = Content.Load<Song>("Sounds/nature");
             MediaPlayer.Play(MySounds.bgmMusic);
 
-            
+
             Enemy.enemies.Add(new Snake(new Vector2(500, 200))); // you can use this to test if your classes and such work. Not normally good practice except for testing.
-             Enemy.enemies.Add(new Eye(new Vector2(450, 400)));
-             Obstacle.obstacles.Add(new Tree(new Vector2(174, 200)));
+            Enemy.enemies.Add(new Eye(new Vector2(450, 400)));
+            Obstacle.obstacles.Add(new Tree(new Vector2(174, 200)));
             Obstacle.obstacles.Add(new Bush(new Vector2(600, 300)));
-            
+
 
             // if object ref not found, make sure you are pulling the latest tiled map version. 
 
@@ -140,11 +125,11 @@ namespace NeutralChocolate
             //      else if (type == "Eye")
             //          Enemy.enemies.Add(new Eye(en.Position));
             //  }
-             
 
-            
+
+
             // TiledMapObject[] allObstacles = myMap.GetLayer<TiledMapObjectLayer>("obstacles").Objects;
-            
+
             // foreach (var obj in allObstacles)
             // {
             //     string type;
@@ -156,7 +141,7 @@ namespace NeutralChocolate
             //         Obstacle.obstacles.Add(new Bush(obj.Position));
 
             // }
-           
+
 
         }
 
@@ -170,41 +155,41 @@ namespace NeutralChocolate
             // TODO: Add your update logic here
             // if (player.Health > 0)
             // {
-                
+
             // }
-               // player.Update(gameTime, myMap.WidthInPixels, myMap.HeightInPixels);
-// //*****************************************************************
-// //              Camera logic
-//             float tempX = player.Position.X;
-//             float tempY = player.Position.Y;
-//             int camW = _graphics.PreferredBackBufferWidth;
-//             int camH = _graphics.PreferredBackBufferHeight;
-//             int mapW = myMap.WidthInPixels;  
-//             int mapH = myMap.HeightInPixels;
+            player.Update(gameTime, Winder.Width, Winder.Height);
+            // //*****************************************************************
+            // //              Camera logic
+            //             float tempX = player.Position.X;
+            //             float tempY = player.Position.Y;
+            //             int camW = _graphics.PreferredBackBufferWidth;
+            //             int camH = _graphics.PreferredBackBufferHeight;
+            //             int mapW = myMap.WidthInPixels;  
+            //             int mapH = myMap.HeightInPixels;
 
-//             if (tempX <camW /2)
-//             {
-//                 tempX = camW / 2;
-//             }    
+            //             if (tempX <camW /2)
+            //             {
+            //                 tempX = camW / 2;
+            //             }    
 
-//             if (tempY < camH /2)
-//             {
-//                 tempY = camH / 2;
-//             }
+            //             if (tempY < camH /2)
+            //             {
+            //                 tempY = camH / 2;
+            //             }
 
-//              if (tempX > (mapW -(camW/2)))
-//                  {
-//                  tempX = (mapW - (camW / 2));
-//              }
+            //              if (tempX > (mapW -(camW/2)))
+            //                  {
+            //                  tempX = (mapW - (camW / 2));
+            //              }
 
-//              if (tempY > (mapH -(camH /2)))
-//              {
-//                  tempY = (mapH - (camH / 2));
-//              }
+            //              if (tempY > (mapH -(camH /2)))
+            //              {
+            //                  tempY = (mapH - (camH / 2));
+            //              }
 
-//             cam.LookAt(new Vector2(tempX,tempY)); // add to focus around player, and locks it to map, 
-//             //cam.LookAt(player.Position); generic look at map
-// //****************************************************************
+            //             cam.LookAt(new Vector2(tempX,tempY)); // add to focus around player, and locks it to map, 
+            //             //cam.LookAt(player.Position); generic look at map
+            // //****************************************************************
             foreach (Projectile proj in Projectile.projectiles) // goes through every elemeent in the projectile list and referes to it as proj the current projectile
             {
                 proj.Update(gameTime);
@@ -219,24 +204,12 @@ namespace NeutralChocolate
         }
 
         protected override void Draw(GameTime gameTime)
-            
         {
-          
-            
-        GraphicsDevice.Clear(Color.ForestGreen);
-
-
+            GraphicsDevice.Clear(Color.ForestGreen);
             mapRenderer.Draw(cam.GetViewMatrix()); //, cam.GetViewMatrix());
+            _spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); // can hijack sprite bach to house the camera information+
 
-            _spriteBatch.Begin(transformMatrix:cam.GetViewMatrix()); // can hijack sprite bach to house the camera information+
-          
-
-           // _spriteBatch.DrawRectangle(new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), new Size2(200, 200), Color.Blue, 7, 0);
-
-            //_spriteBatch.DrawString()
-
-           // if (player.Health > 0)
-               // player.anim.Draw(_spriteBatch, new Vector2(player.Position.X - 48, player.Position.Y - 48)); // for the sprite center minus half the pixel size for X and Y
+            player.anim.Draw(_spriteBatch, new Vector2(player.Position.X - 48, player.Position.Y - 48)); // for the sprite center minus half the pixel size for X and Y
 
 
             foreach (Enemy en in Enemy.enemies)
@@ -249,23 +222,23 @@ namespace NeutralChocolate
                     spriteToDraw = snakeEnemy_Sprite;
                     rad = 50;
                 }
-                else 
-                { 
+                else
+                {
                     spriteToDraw = eyeEnemy_Sprite;
                     rad = 73;
                 }
 
                 _spriteBatch.Draw(spriteToDraw, new Vector2(en.Postion.X - rad, en.Postion.Y - rad), Color.White);
-                
+
             }
-            
+
 
             foreach (Projectile proj in Projectile.projectiles) //shooting projectiles
             {
-                _spriteBatch.Draw(bullet_Sprite, new Vector2(proj.Position.X -proj.Radius, proj.Position.Y-proj.Radius), Color.White); // - radius makes it center of sprite, 
+                _spriteBatch.Draw(bullet_Sprite, new Vector2(proj.Position.X - proj.Radius, proj.Position.Y - proj.Radius), Color.White); // - radius makes it center of sprite, 
             }
 
-          
+
 
 
             foreach (Projectile proj in Projectile.projectiles)  // nesting loop  for each projectile, run the enemy loop we can now compare teh projectile to eneymy for colision
@@ -273,7 +246,7 @@ namespace NeutralChocolate
                 foreach (Enemy en in Enemy.enemies)
                 {
                     int sum = proj.Radius + en.Radius;
-                    if ( Vector2.Distance(proj.Position,en.Postion) < sum)
+                    if (Vector2.Distance(proj.Position, en.Postion) < sum)
                     {
                         proj.Collided = true;
                         en.Health--;
@@ -298,8 +271,8 @@ namespace NeutralChocolate
                 if (player.Health <= 0)  // stops music on death
                 {
                     MediaPlayer.Stop();
-                    
-                    
+
+
                 }
             }
 
@@ -316,7 +289,7 @@ namespace NeutralChocolate
             //     else
             //         spriteToDraw = bush_Sprite;
             //     _spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
-                       
+
             // }
             _spriteBatch.End();
 
