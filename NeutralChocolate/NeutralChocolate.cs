@@ -59,6 +59,7 @@ namespace NeutralChocolate
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            
             graphics.PreferredBackBufferWidth = 1280;  //GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = 720; //GraphicsDevice.DisplayMode.Height;
             //graphics.IsFullScreen = true;
@@ -146,7 +147,7 @@ namespace NeutralChocolate
 
             mapRenderer.Update(gameTime);
 
-            player.Update(gameTime, Winder.Width, Winder.Height);
+            player.Update(gameTime, myMap.WidthInPixels, myMap.HeightInPixels);
             //*****************************************************************
             //              Camera logic
                         float tempX = player.Position.X;
@@ -196,7 +197,7 @@ namespace NeutralChocolate
         {
             GraphicsDevice.Clear(Color.ForestGreen);
             mapRenderer.Draw(cam.GetViewMatrix()); //, cam.GetViewMatrix());
-            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); // can hijack sprite bach to house the camera information+
+            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); 
             
             
             if (player.Health > 0)
