@@ -16,12 +16,7 @@ namespace NeutralChocolate
         Left,
         Right
     }
-
-    public static class MySounds
-    {
-        public static SoundEffect projectileSound;
-        public static Song bgmMusic;
-    }
+  
     public class Game1 : Game
     {
         private GraphicsDeviceManager graphics;
@@ -58,8 +53,10 @@ namespace NeutralChocolate
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            
+           
+            Store.textures = new TextureManager();
+            Store.soundEffects = new SoundEffectManager();
+            Store.songs = new SongManager();
             graphics.PreferredBackBufferWidth = 1280;  //GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = 720; //GraphicsDevice.DisplayMode.Height;
             //graphics.IsFullScreen = true;
@@ -68,10 +65,9 @@ namespace NeutralChocolate
             graphics.ApplyChanges();
             player = new Player();
 
-
-            base.Initialize();
             font = Content.Load<SpriteFont>("gameFont");
             Winder.Initialize(Window, font);
+            base.Initialize();
         }
 
         protected override void LoadContent()
@@ -102,9 +98,11 @@ namespace NeutralChocolate
             player.animations[2] = new AnimatedSprite(playerLeft, 1, 4);
             player.animations[3] = new AnimatedSprite(playerRight, 1, 4);
 
-            MySounds.projectileSound = Content.Load<SoundEffect>("Sounds/blip");
-            MySounds.bgmMusic = Content.Load<Song>("Sounds/nature");
-            MediaPlayer.Play(MySounds.bgmMusic);
+        
+            Store.soundEffects.Add(SoundEffectName.Blip, Content.Load<SoundEffect>("Sounds/blip"));
+            Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
+            Store.songs.Play(SongName.Overworld);
+          
 
 
             // Enemy.enemies.Add(new Snake(new Vector2(500, 200))); // you can use this to test if your classes and such work. Not normally good practice except for testing.
@@ -142,6 +140,7 @@ namespace NeutralChocolate
 
         protected override void Update(GameTime gameTime)
         {
+            
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 

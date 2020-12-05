@@ -127,7 +127,6 @@ namespace NeutralChocolate
                         if (!Obstacle.didCollide(tempPos, radius)&& tempPos.X <mapW - radius)
                         { 
                             position.X += speed * dt;
-                            
 
                         }
                         break;
@@ -139,7 +138,6 @@ namespace NeutralChocolate
                         {
                             position.X -= speed * dt;
                             
-
                         }
 
                         break;
@@ -150,7 +148,6 @@ namespace NeutralChocolate
                         {
                             position.Y += speed * dt;
                             
-
                         }
                         break;
 
@@ -159,8 +156,6 @@ namespace NeutralChocolate
                         if (!Obstacle.didCollide(tempPos, radius) && tempPos.Y > radius )
                         {
                             position.Y -= speed * dt;
-                          
-
 
                         }
                         break;
@@ -173,7 +168,7 @@ namespace NeutralChocolate
             if (kState.IsKeyDown(Keys.Space)&& kStateOld.IsKeyUp(Keys.Space))
             {
                 Projectile.projectiles.Add(new Projectile(position,direction));
-                MySounds.projectileSound.Play();
+                  Store.soundEffects.Get(SoundEffectName.Blip).Play();
             }
             kStateOld = kState;
         }
