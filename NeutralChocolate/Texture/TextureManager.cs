@@ -6,7 +6,12 @@ namespace NeutralChocolate
     public enum TextureName
     {
         None,
-      
+        Bullet,
+        Tree,
+        Bush,
+        Snake,
+        Eye,
+        Heart,
     }
 
     public class TextureManager

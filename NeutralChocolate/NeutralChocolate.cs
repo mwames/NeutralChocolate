@@ -28,15 +28,6 @@ namespace NeutralChocolate
         Texture2D playerUp;
         Texture2D playerLeft;
         Texture2D playerRight;
-
-        Texture2D eyeEnemy_Sprite;
-        Texture2D snakeEnemy_Sprite;
-        Texture2D bush_Sprite;
-        Texture2D tree_Sprite;
-
-        Texture2D heart_Sprite;
-        Texture2D bullet_Sprite;
-
         TiledMapRenderer mapRenderer;
         TiledMap myMap;
 
@@ -79,15 +70,6 @@ namespace NeutralChocolate
             playerUp = Content.Load<Texture2D>("Player/playerUp");
             playerLeft = Content.Load<Texture2D>("Player/playerLeft");
             playerRight = Content.Load<Texture2D>("Player/playerRight");
-
-            eyeEnemy_Sprite = Content.Load<Texture2D>("Enemies/eyeEnemy");
-            snakeEnemy_Sprite = Content.Load<Texture2D>("Enemies/snakeEnemy");
-
-            bush_Sprite = Content.Load<Texture2D>("Obsticales/bush");
-            tree_Sprite = Content.Load<Texture2D>("Obsticales/tree");
-
-            bullet_Sprite = Content.Load<Texture2D>("Misc/bullet");
-            heart_Sprite = Content.Load<Texture2D>("Misc/heart");
             myMap = Content.Load<TiledMap>("Misc/Test2");
             mapRenderer.LoadMap(myMap);
 
@@ -97,8 +79,13 @@ namespace NeutralChocolate
             player.animations[1] = new AnimatedSprite(playerUp, 1, 4);
             player.animations[2] = new AnimatedSprite(playerLeft, 1, 4);
             player.animations[3] = new AnimatedSprite(playerRight, 1, 4);
-
-        
+            
+            Store.textures.Add(TextureName.Bullet, Content.Load<Texture2D>("Misc/bullet"));
+            Store.textures.Add(TextureName.Tree, Content.Load<Texture2D>("Obsticales/tree"));
+            Store.textures.Add(TextureName.Bush, Content.Load<Texture2D>("Obsticales/bush"));
+            Store.textures.Add(TextureName.Eye, Content.Load<Texture2D>("Enemies/eyeEnemy"));
+            Store.textures.Add(TextureName.Snake, Content.Load<Texture2D>("Enemies/snakeEnemy"));
+            Store.textures.Add(TextureName.Heart, Content.Load<Texture2D>("Misc/heart"));              
             Store.soundEffects.Add(SoundEffectName.Blip, Content.Load<SoundEffect>("Sounds/blip"));
             Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
             Store.songs.Play(SongName.Overworld);
@@ -209,12 +196,12 @@ namespace NeutralChocolate
 
                 if (en.GetType() == typeof(Snake))
                 {
-                    spriteToDraw = snakeEnemy_Sprite;
+                    spriteToDraw = Store.textures.Get(TextureName.Snake);
                     rad = 50;
                 }
                 else
                 {
-                    spriteToDraw = eyeEnemy_Sprite;
+                    spriteToDraw = Store.textures.Get(TextureName.Eye);
                     rad = 73;
                 }
 
@@ -223,7 +210,7 @@ namespace NeutralChocolate
 
             foreach (Projectile proj in Projectile.projectiles) //shooting projectiles
             {
-                spriteBatch.Draw(bullet_Sprite, new Vector2(proj.Position.X - proj.Radius, proj.Position.Y - proj.Radius), Color.White); // - radius makes it center of sprite, 
+                spriteBatch.Draw(Store.textures.Get(TextureName.Bullet), new Vector2(proj.Position.X - proj.Radius, proj.Position.Y - proj.Radius), Color.White); // - radius makes it center of sprite, 
             }
 
             // Projectile collision
@@ -265,9 +252,9 @@ namespace NeutralChocolate
             {
                 Texture2D spriteToDraw;
                 if (o.GetType() == typeof(Tree))
-                    spriteToDraw = tree_Sprite;
+                    spriteToDraw = Store.textures.Get(TextureName.Tree);
                 else
-                    spriteToDraw = bush_Sprite;
+                    spriteToDraw = Store.textures.Get(TextureName.Bush);
                 spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
             }
             spriteBatch.End();
@@ -276,7 +263,7 @@ namespace NeutralChocolate
             PadPrinter.Print(spriteBatch, font);
             for (int i = 0; i < player.Health; i++)
             {
-                spriteBatch.Draw(heart_Sprite, new Vector2(i * 63, 0), Color.White);
+                spriteBatch.Draw(Store.textures.Get(TextureName.Heart), new Vector2(i * 63, 0), Color.White);
             }
 
             spriteBatch.End();
