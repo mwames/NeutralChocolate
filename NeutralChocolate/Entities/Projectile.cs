@@ -7,61 +7,44 @@ using Microsoft.Xna.Framework.Input;
 
 namespace NeutralChocolate
 {
-    class Projectile
+    class Projectile : IEnemy
     {
 
+        private readonly int SPEED = 800;
+        private int health = 1;
         private Vector2 position;
-        private int speed = 800;
-        private int radius = 15;
         private Dir direction;
-        private bool collided = false;
-
-        public static List<Projectile> projectiles = new List<Projectile>();
-
-        public Projectile(Vector2 newPos, Dir newDir)
+        public Projectile(Vector2 position, Dir direction)
         {
-            position = newPos;
-            direction = newDir;
+            this.position = position;
+            this.direction = direction;
+        }
+        public Vector2 Position => position;
+        public int Radius => 15;
+
+        public int Health
+        {
+            get => health;
+            set => health = value;
         }
 
-        public bool Collided 
-        {
-            get { return collided; }
-            set { collided = value; }
-        }
-        public Vector2 Position
-        {
-            get
-            {
-                return position;
-            }
-        }
-        public int Radius
-        {
-            get 
-            { return radius;
-            }
-        }
-
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Vector2 playerPos)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             switch (direction)
             {
                 case Dir.Right:
-
-                    position.X += speed * dt;
+                    position.X += SPEED * dt;
                     break;
-
                 case Dir.Left:
-                    position.X -= speed * dt;
+                    position.X -= SPEED * dt;
                     break;
                 case Dir.Down:
-                    position.Y += speed * dt;
+                    position.Y += SPEED * dt;
                     break;
                 case Dir.Up:
-                    position.Y -= speed * dt;
+                    position.Y -= SPEED * dt;
                     break;
 
                 default:
@@ -69,9 +52,14 @@ namespace NeutralChocolate
             }
         }
 
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Store.textures.Get(TextureName.Bullet), position, Color.White);
+        }
 
-       
-
+        public void OnHit()
+        {
+            Health -= 1;
+        }
     }
-   
 }

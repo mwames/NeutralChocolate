@@ -1,177 +1,166 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace NeutralChocolate
 {
-    class Player
+    class Player : IEntity
     {
+        private readonly int RADIUS = 56;
         private Vector2 position = new Vector2(100, 100);
         private int health = 5;
         private int speed = 300;
         private Dir direction = Dir.Down;
-        private bool isMoving = false;
-        private int radius = 56;
         private float healthTimer = 0f;
+        private bool isMoving = false;
         private KeyboardState kStateOld = Keyboard.GetState();
-        public AnimatedSprite anim;
-        public AnimatedSprite[] animations = new AnimatedSprite[4];
+        private AnimatedSprite[] animations;
+        private AnimatedSprite Animation => animations[(int)direction];
+        private GamePadState gPrevious;
+        private GamePadState gCurrent;
+        private KeyboardState kPrevious;
+        private KeyboardState kCurrent;
+        private List<IEnemy> bullets;
 
+        public int Radius => RADIUS;
+        public Vector2 Position => position;
+        public int Health => health;
 
-        public float HealthTimer
-        {
-            get { return healthTimer; }
-            set { healthTimer = value; }
-        }
-        public int Radius
-        {
-            get { return radius; }
-            
-        }
-        public int Health
-        {
-            get { return health; }
-            set {health = value;}
+        public Player(List<IEnemy> bullets) {
+            this.bullets = bullets;
         }
 
-        public Vector2 Position
-        {
-            get { return position; }
+        public void Initialize() {
+            animations = new[] {
+                new AnimatedSprite(Store.textures.Get(TextureName.PlayerDown), 1, 4),
+                new AnimatedSprite(Store.textures.Get(TextureName.PlayerUp), 1, 4),
+                new AnimatedSprite(Store.textures.Get(TextureName.PlayerLeft), 1, 4),
+                new AnimatedSprite(Store.textures.Get(TextureName.PlayerRight), 1, 4)
+            };
         }
 
-        public void setX(float newX)
+        private bool WasPressed(Buttons button)
         {
-            position.X = newX;
+            return gCurrent.IsButtonDown(button) && !gPrevious.IsButtonDown(button);
         }
 
-        public void setY(float newY)
+        private bool IsPressed(Buttons button)
         {
-            position.Y = newY;
+            return gCurrent.IsButtonDown(button);
         }
 
-        public void Update(GameTime gameTime, int mapW,int mapH)
+        private bool WasPressed(Keys key)
         {
-            KeyboardState kState = Keyboard.GetState();
+            return kCurrent.IsKeyDown(key) && !kPrevious.IsKeyDown(key);
+        }
+
+        private bool IsPressed(Keys key)
+        {
+            return kCurrent.IsKeyDown(key);
+        }
+
+        private AnimatedSprite GetAnimationFrame(Texture2D texture) {
+            return new AnimatedSprite(texture, 1, 4);
+        }
+
+        private void Move(Dir direction, float distance)
+        {
+            isMoving = true;
+
+            this.direction = direction;
+            if (direction == Dir.Up)
+            {
+                position.Y -= distance;
+            }
+            if (direction == Dir.Down)
+            {
+                position.Y += distance;
+            }
+            if (direction == Dir.Left)
+            {
+                position.X -= distance;
+            }
+            if (direction == Dir.Right)
+            {
+                position.X += distance;
+            }
+        }
+
+        private void Shoot(Dir direction)
+        {
+            bullets.Add(new Projectile(position, direction));
+        }
+
+        public void Update(GameTime gameTime, Vector2 playerPos)
+        {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (health <= 0)
+            {
+                Store.songs.Stop();
+            }
 
             if (healthTimer > 0)
                 healthTimer -= dt;
 
-            /*   using a switch statement instead of using enum example. 
-             switch (direction)
-            {
-                case Dir.Down:
-                    anim = animations[0];
-                    break;
-                case Dir.Up:
-                    anim = animations[1];
-                    break;
-                case Dir.Left:
-                    anim = animations[2];
-                    break;
-                case Dir.Right:
-                    anim = animations[3];
-                    break;
-                default:
-                    break;
-            }
-            */
+            gPrevious = gCurrent;
+            gCurrent = GamePad.GetState(PlayerIndex.One);
 
-            // enum example. 
-            anim = animations[(int)direction];
-
-
-            if (isMoving)
-                anim.Update(gameTime);
-            else anim.setFrame(1) ;
+            kPrevious = kCurrent;
+            kCurrent = Keyboard.GetState();
 
             isMoving = false;
+            var tempPos = position;
+            var distanceToTravel = speed * dt;
 
-            if (kState.IsKeyDown(Keys.Right))
-            {
-                direction = Dir.Right;
-                //position.X += speed * dt;
-                isMoving = true;
-            }
-            if (kState.IsKeyDown(Keys.Left))
+            if (IsPressed(Buttons.LeftThumbstickUp) || IsPressed(Keys.Up))
+                Move(Dir.Up, distanceToTravel);
 
-            {
-                direction = Dir.Left;
-               // position.X -= speed * dt;
-                isMoving = true;
-            }
+            if (IsPressed(Buttons.LeftThumbstickDown) || IsPressed(Keys.Down))
+                Move(Dir.Down, distanceToTravel);
 
-            if (kState.IsKeyDown(Keys.Up))
-            {
-               direction = Dir.Up;
-               // position.Y -= speed * dt;
-                isMoving = true;
+            if (IsPressed(Buttons.LeftThumbstickLeft) || IsPressed(Keys.Left))
+                Move(Dir.Left, distanceToTravel);
 
-            }
+            if (IsPressed(Buttons.LeftThumbstickRight) || IsPressed(Keys.Right))
+                Move(Dir.Right, distanceToTravel);
 
-            if (kState.IsKeyDown(Keys.Down))
-            {
-                direction = Dir.Down;
-               // position.Y += speed * dt;
-                isMoving = true;
-            }
             if (isMoving)
-
             {
-                Vector2 tempPos = position;
-                switch (direction)
-                {
-                    case Dir.Right:
-
-                        tempPos.X += speed * dt;
-                        if (!Obstacle.didCollide(tempPos, radius)&& tempPos.X <mapW - radius)
-                        { 
-                            position.X += speed * dt;
-
-                        }
-                        break;
-
-                    case Dir.Left:
-                        tempPos.X -= speed * dt;
-                        if (!Obstacle.didCollide(tempPos, radius) && tempPos.X > radius)
-
-                        {
-                            position.X -= speed * dt;
-                            
-                        }
-
-                        break;
-
-                    case Dir.Down:
-                         tempPos.Y += speed * dt;
-                        if (!Obstacle.didCollide(tempPos, radius) && tempPos.Y <mapH - radius)
-                        {
-                            position.Y += speed * dt;
-                            
-                        }
-                        break;
-
-                    case Dir.Up:
-                        tempPos.Y -= speed * dt;
-                        if (!Obstacle.didCollide(tempPos, radius) && tempPos.Y > radius )
-                        {
-                            position.Y -= speed * dt;
-
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                Animation.Update(gameTime);
+            }
+            else
+            {
+                Animation.setFrame(1);
             }
 
+            if (WasPressed(Keys.Space))
+                Shoot(direction);
 
-            if (kState.IsKeyDown(Keys.Space)&& kStateOld.IsKeyUp(Keys.Space))
-            {
-                Projectile.projectiles.Add(new Projectile(position,direction));
-                  Store.soundEffects.Get(SoundEffectName.Blip).Play();
-            }
-            kStateOld = kState;
+            if (WasPressed(Buttons.Y))
+                Shoot(Dir.Up);
+
+            if (WasPressed(Buttons.A))
+                Shoot(Dir.Down);
+
+            if (WasPressed(Buttons.X))
+                Shoot(Dir.Left);
+
+            if (WasPressed(Buttons.B))
+                Shoot(Dir.Right);
         }
 
+        public void OnCollide() {
+            if (healthTimer <= 0) {
+                health--;
+                healthTimer = 1.5f;
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            Animation.Draw(spriteBatch, new Vector2(Position.X - 48, Position.Y - 48));
+        }
     }
 }

@@ -6,6 +6,8 @@ using MonoGame.Extended.Tiled.Renderers;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended.Tiled;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NeutralChocolate
 {
@@ -16,26 +18,22 @@ namespace NeutralChocolate
         Left,
         Right
     }
-  
-    public class Game1 : Game
+
+    public class NeutralChocolate : Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
+        private Texture2D player_Sprite;
+        private TiledMapRenderer mapRenderer;
+        private TiledMap myMap;
+        private OrthographicCamera cam;
+        private Player player;
+        private List<IEnemy> enemies = new List<IEnemy>();
+        private List<IObstacle> obstacles = new List<IObstacle>();
+        private List<IEnemy> bullets = new List<IEnemy>();
 
-        Texture2D player_Sprite;
-        Texture2D playerDown;
-        Texture2D playerUp;
-        Texture2D playerLeft;
-        Texture2D playerRight;
-        TiledMapRenderer mapRenderer;
-        TiledMap myMap;
-
-        OrthographicCamera cam;
-
-        Player player;
-
-        public Game1()
+        public NeutralChocolate()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -54,11 +52,32 @@ namespace NeutralChocolate
             mapRenderer = new TiledMapRenderer(GraphicsDevice);
             cam = new OrthographicCamera(GraphicsDevice);
             graphics.ApplyChanges();
-            player = new Player();
             Store.scenes.Add(SceneName.Pause, new PauseScene());
+            player = new Player(bullets);
+
             font = Content.Load<SpriteFont>("gameFont");
             Winder.Initialize(Window, font);
             base.Initialize();
+        }
+
+        private IEntity EntityFactory(TiledMapObject tmo)
+        {
+            string type;
+            tmo.Properties.TryGetValue("Type", out type);
+
+            switch (type)
+            {
+                case "Snake":
+                    return new Snake(tmo.Position);
+                case "Eye":
+                    return new Eye(tmo.Position);
+                case "Tree":
+                    return new Tree(tmo.Position);
+                case "Bush":
+                    return new Bush(tmo.Position);
+                default:
+                    return null;
+            }
         }
 
         protected override void LoadContent()
@@ -66,115 +85,146 @@ namespace NeutralChocolate
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             player_Sprite = Content.Load<Texture2D>("Player/player");
-            playerDown = Content.Load<Texture2D>("Player/playerDown");
-            playerUp = Content.Load<Texture2D>("Player/playerUp");
-            playerLeft = Content.Load<Texture2D>("Player/playerLeft");
-            playerRight = Content.Load<Texture2D>("Player/playerRight");
             myMap = Content.Load<TiledMap>("Misc/Test2");
             mapRenderer.LoadMap(myMap);
 
 
             // these are ordered in the same way as the enum up top to condense animation code on player class
-            player.animations[0] = new AnimatedSprite(playerDown, 1, 4);
-            player.animations[1] = new AnimatedSprite(playerUp, 1, 4);
-            player.animations[2] = new AnimatedSprite(playerLeft, 1, 4);
-            player.animations[3] = new AnimatedSprite(playerRight, 1, 4);
-            
+            Store.textures.Add(TextureName.PlayerUp, Content.Load<Texture2D>("Player/playerUp"));
+            Store.textures.Add(TextureName.PlayerDown, Content.Load<Texture2D>("Player/playerDown"));
+            Store.textures.Add(TextureName.PlayerLeft, Content.Load<Texture2D>("Player/playerLeft"));
+            Store.textures.Add(TextureName.PlayerRight, Content.Load<Texture2D>("Player/playerRight"));
             Store.textures.Add(TextureName.Bullet, Content.Load<Texture2D>("Misc/bullet"));
             Store.textures.Add(TextureName.Tree, Content.Load<Texture2D>("Obsticales/tree"));
             Store.textures.Add(TextureName.Bush, Content.Load<Texture2D>("Obsticales/bush"));
             Store.textures.Add(TextureName.Eye, Content.Load<Texture2D>("Enemies/eyeEnemy"));
             Store.textures.Add(TextureName.Snake, Content.Load<Texture2D>("Enemies/snakeEnemy"));
-            Store.textures.Add(TextureName.Heart, Content.Load<Texture2D>("Misc/heart"));              
+            Store.textures.Add(TextureName.Heart, Content.Load<Texture2D>("Misc/heart"));
             Store.soundEffects.Add(SoundEffectName.Blip, Content.Load<SoundEffect>("Sounds/blip"));
             Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
             Store.songs.Play(SongName.Overworld);
-          
 
-
-            // Enemy.enemies.Add(new Snake(new Vector2(500, 200))); // you can use this to test if your classes and such work. Not normally good practice except for testing.
-            // Enemy.enemies.Add(new Eye(new Vector2(450, 400)));
-            // Obstacle.obstacles.Add(new Tree(new Vector2(174, 200)));
-            // Obstacle.obstacles.Add(new Bush(new Vector2(600, 300)));
-
+            player.Initialize();
 
             //if object ref not found, make sure you are pulling the latest tiled map version. 
-             TiledMapObject[] allEnemies = myMap.GetLayer<TiledMapObjectLayer>("Monsters").Objects; 
-             foreach (var en in allEnemies)
-             {
-                 string type;
-                 en.Properties.TryGetValue("Type", out type);
+            var allEnemies = new List<TiledMapObject>(myMap.GetLayer<TiledMapObjectLayer>("Monsters").Objects);
+            var allObstacles = new List<TiledMapObject>(myMap.GetLayer<TiledMapObjectLayer>("obstacles").Objects);
 
-                 if (type == "Snake")
-                     Enemy.enemies.Add(new Snake(en.Position));
-                 else if (type == "Eye")
-                     Enemy.enemies.Add(new Eye(en.Position));
-             }
+            enemies = allEnemies
+                .Select(enemy => (IEnemy)EntityFactory(enemy))
+                .Where((enemy) => enemy != null)
+                .ToList();
 
-            TiledMapObject[] allObstacles = myMap.GetLayer<TiledMapObjectLayer>("obstacles").Objects;
+            obstacles = allObstacles
+                .Select(obstacle => (IObstacle)EntityFactory(obstacle))
+                .Where(obstacle => obstacle != null)
+                .ToList();
+        }
 
-            foreach (var obj in allObstacles)
+        private void DrawUI(int playerHealth)
+        {
+            for (int i = 0; i < playerHealth; i++)
             {
-                string type;
-                obj.Properties.TryGetValue("Type", out type);
-
-                if (type == "Tree")
-                    Obstacle.obstacles.Add(new Tree(obj.Position));
-                else if (type == "Bush")
-                    Obstacle.obstacles.Add(new Bush(obj.Position));
+                spriteBatch.Draw(Store.textures.Get(TextureName.Heart), new Vector2(i * 63, 0), Color.White);
             }
+        }
+
+        private bool DidCollide(IEntity otherEntity)
+        {
+            foreach (IObstacle o in obstacles)
+            {
+                int sum = o.Radius + otherEntity.Radius;
+                if (Vector2.Distance(o.HitPosition, otherEntity.Position) < sum)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void UpdateCamera() {
+            // Camera logic
+            float tempX = player.Position.X;
+            float tempY = player.Position.Y;
+            int camW = graphics.PreferredBackBufferWidth;
+            int camH = graphics.PreferredBackBufferHeight;
+            int mapW = myMap.WidthInPixels;
+            int mapH = myMap.HeightInPixels;
+
+            if (tempX < camW / 2)
+            {
+                tempX = camW / 2;
+            }
+
+            if (tempY < camH / 2)
+            {
+                tempY = camH / 2;
+            }
+
+            if (tempX > (mapW - (camW / 2)))
+            {
+                tempX = (mapW - (camW / 2));
+            }
+
+            if (tempY > (mapH - (camH / 2)))
+            {
+                tempY = (mapH - (camH / 2));
+            }
+
+            cam.LookAt(new Vector2(tempX, tempY));
+        }
+
+        private bool Bonked(IEntity entity1, IEntity entity2)
+        {
+            return Vector2.Distance(entity1.Position, entity2.Position) < entity1.Radius + entity2.Radius;
+        }
+
+        private void ResolveBullet(IEnemy bullet, List<IEnemy> enemies)
+        {
+            enemies.ForEach(enemy => {
+                if (Bonked(bullet, enemy))
+                {
+                    bullet.OnHit();
+                    enemy.OnHit();
+                }
+                if (DidCollide(bullet))
+                {
+                    bullet.OnHit();
+                }
+            });
+        }
+
+        private void ResolvePlayer(Player player, List<IEnemy> enemies) {
+            enemies.ForEach(enemy => {
+                if (Bonked(player, enemy))
+                {
+                    player.OnCollide();
+                    return;
+                }
+            });
         }
 
         protected override void Update(GameTime gameTime)
         {
-            
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            UpdateCamera();
             mapRenderer.Update(gameTime);
 
-            player.Update(gameTime, myMap.WidthInPixels, myMap.HeightInPixels);
-            //*****************************************************************
-            //              Camera logic
-                        float tempX = player.Position.X;
-                        float tempY = player.Position.Y;
-                        int camW = graphics.PreferredBackBufferWidth;
-                        int camH = graphics.PreferredBackBufferHeight;
-                        int mapW = myMap.WidthInPixels;  
-                        int mapH = myMap.HeightInPixels;
+            // Run the update function for each entity.
+            enemies.ForEach(entity => entity.Update(gameTime, player.Position));
+            bullets.ForEach(entity => entity.Update(gameTime, player.Position));
+            player.Update(gameTime, player.Position);
 
-                        if (tempX <camW /2)
-                        {
-                            tempX = camW / 2;
-                        }    
+            // Check collisions
+            ResolvePlayer(player, enemies);
+            bullets.ForEach(bullet => ResolveBullet(bullet, enemies));
 
-                        if (tempY < camH /2)
-                        {
-                            tempY = camH / 2;
-                        }
-
-                         if (tempX > (mapW -(camW/2)))
-                         {
-                             tempX = (mapW - (camW / 2));
-                         }
-
-                         if (tempY > (mapH -(camH /2)))
-                         {
-                             tempY = (mapH - (camH / 2));
-                         }
-
-                        cam.LookAt(new Vector2(tempX,tempY)); // add to focus around player, and locks it to map, 
-                        //cam.LookAt(player.Position); generic look at map
-            //****************************************************************
-            foreach (Projectile proj in Projectile.projectiles) // goes through every elemeent in the projectile list and referes to it as proj the current projectile
-            {
-                proj.Update(gameTime);
-            }
-
-            foreach (Enemy en in Enemy.enemies)
-            {
-                en.Update(gameTime, player.Position);
-            }
+            // Remove any necessary entities after collision resolution.
+            enemies.RemoveAll(entity => entity.Health <= 0);
+            bullets.RemoveAll(entity => entity.Health <= 0);
 
             base.Update(gameTime);
         }
@@ -182,91 +232,22 @@ namespace NeutralChocolate
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.ForestGreen);
-            mapRenderer.Draw(cam.GetViewMatrix()); //, cam.GetViewMatrix());
-            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix()); 
-            
-            
-            if (player.Health > 0)
-                player.anim.Draw(spriteBatch, new Vector2(player.Position.X - 48, player.Position.Y - 48)); // for the sprite center minus half the pixel size for X and Y
+            mapRenderer.Draw(cam.GetViewMatrix());
+            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
+            player.Draw(spriteBatch);
 
-            foreach (Enemy en in Enemy.enemies)
-            {
-                Texture2D spriteToDraw;
-                int rad;
+            enemies.ForEach(enemy => enemy.Draw(spriteBatch));
+            bullets.ForEach(bullet => bullet.Draw(spriteBatch));
+            obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
 
-                if (en.GetType() == typeof(Snake))
-                {
-                    spriteToDraw = Store.textures.Get(TextureName.Snake);
-                    rad = 50;
-                }
-                else
-                {
-                    spriteToDraw = Store.textures.Get(TextureName.Eye);
-                    rad = 73;
-                }
-
-                spriteBatch.Draw(spriteToDraw, new Vector2(en.Postion.X - rad, en.Postion.Y - rad), Color.White);
-            }
-
-            foreach (Projectile proj in Projectile.projectiles) //shooting projectiles
-            {
-                spriteBatch.Draw(Store.textures.Get(TextureName.Bullet), new Vector2(proj.Position.X - proj.Radius, proj.Position.Y - proj.Radius), Color.White); // - radius makes it center of sprite, 
-            }
-
-            // Projectile collision
-            foreach (Projectile proj in Projectile.projectiles)
-            {
-                foreach (Enemy en in Enemy.enemies)
-                {
-                    int sum = proj.Radius + en.Radius;
-                    if (Vector2.Distance(proj.Position, en.Postion) < sum)
-                    {
-                        proj.Collided = true;
-                        en.Health--;
-                    }
-                }
-                if (Obstacle.didCollide(proj.Position, proj.Radius))
-                    proj.Collided = true;
-            }
-
-            foreach (Enemy en in Enemy.enemies) // Creating player damage
-            {
-                int sum = player.Radius + en.Radius;
-                if (Vector2.Distance(player.Position, en.Postion) < sum && player.HealthTimer <= 0)
-                {
-                    player.Health--;
-                    player.HealthTimer = 1.5f;
-                }
-
-                if (player.Health <= 0)  // stops music on death
-                {
-                    MediaPlayer.Stop();
-                }
-            }
-
-            Projectile.projectiles.RemoveAll(p => p.Collided);
-            Enemy.enemies.RemoveAll(e => e.Health <= 0);
-
-
-            foreach (Obstacle o in Obstacle.obstacles)
-            {
-                Texture2D spriteToDraw;
-                if (o.GetType() == typeof(Tree))
-                    spriteToDraw = Store.textures.Get(TextureName.Tree);
-                else
-                    spriteToDraw = Store.textures.Get(TextureName.Bush);
-                spriteBatch.Draw(spriteToDraw, o.Position, Color.White);
-            }
             spriteBatch.End();
 
-            spriteBatch.Begin(); // use this section to keep heath or such locked on screen for camera
+            // Draw to screen space
+            spriteBatch.Begin(transformMatrix: Matrix.Identity);
             PadPrinter.Print(spriteBatch, font);
-            for (int i = 0; i < player.Health; i++)
-            {
-                spriteBatch.Draw(Store.textures.Get(TextureName.Heart), new Vector2(i * 63, 0), Color.White);
-            }
-
+            DrawUI(player.Health);
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }
