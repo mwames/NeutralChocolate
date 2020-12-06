@@ -44,7 +44,7 @@ namespace NeutralChocolate
 
         protected override void Initialize()
         {
-           
+            Store.scenes= new SceneManager();
             Store.textures = new TextureManager();
             Store.soundEffects = new SoundEffectManager();
             Store.songs = new SongManager();
@@ -55,7 +55,7 @@ namespace NeutralChocolate
             cam = new OrthographicCamera(GraphicsDevice);
             graphics.ApplyChanges();
             player = new Player();
-
+            Store.scenes.Add(SceneName.Pause, new PauseScene());
             font = Content.Load<SpriteFont>("gameFont");
             Winder.Initialize(Window, font);
             base.Initialize();
