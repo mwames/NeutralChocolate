@@ -25,13 +25,7 @@ namespace NeutralChocolate
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Texture2D player_Sprite;
-        private TiledMapRenderer mapRenderer;
-        private TiledMap myMap;
-        private OrthographicCamera cam;
-        private Player player;
-        private List<IEnemy> enemies = new List<IEnemy>();
-        private List<IObstacle> obstacles = new List<IObstacle>();
-        private List<IEnemy> bullets = new List<IEnemy>();
+
 
         public NeutralChocolate()
         {
@@ -46,38 +40,14 @@ namespace NeutralChocolate
             Store.textures = new TextureManager();
             Store.soundEffects = new SoundEffectManager();
             Store.songs = new SongManager();
-            graphics.PreferredBackBufferWidth = 1280;  //GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferHeight = 720; //GraphicsDevice.DisplayMode.Height;
-            //graphics.IsFullScreen = true;
-            mapRenderer = new TiledMapRenderer(GraphicsDevice);
-            cam = new OrthographicCamera(GraphicsDevice);
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
             Store.scenes.Add(SceneName.Pause, new PauseScene());
-            player = new Player(bullets);
 
             font = Content.Load<SpriteFont>("gameFont");
             Winder.Initialize(Window, font);
             base.Initialize();
-        }
-
-        private IEntity EntityFactory(TiledMapObject tmo)
-        {
-            string type;
-            tmo.Properties.TryGetValue("Type", out type);
-
-            switch (type)
-            {
-                case "Snake":
-                    return new Snake(tmo.Position);
-                case "Eye":
-                    return new Eye(tmo.Position);
-                case "Tree":
-                    return new Tree(tmo.Position);
-                case "Bush":
-                    return new Bush(tmo.Position);
-                default:
-                    return null;
-            }
         }
 
         protected override void LoadContent()
@@ -85,9 +55,6 @@ namespace NeutralChocolate
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             player_Sprite = Content.Load<Texture2D>("Player/player");
-            myMap = Content.Load<TiledMap>("Misc/Test2");
-            mapRenderer.LoadMap(myMap);
-
 
             // these are ordered in the same way as the enum up top to condense animation code on player class
             Store.textures.Add(TextureName.PlayerUp, Content.Load<Texture2D>("Player/playerUp"));
@@ -104,104 +71,9 @@ namespace NeutralChocolate
             Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
             Store.songs.Play(SongName.Overworld);
 
-            player.Initialize();
-
-            //if object ref not found, make sure you are pulling the latest tiled map version. 
-            var allEnemies = new List<TiledMapObject>(myMap.GetLayer<TiledMapObjectLayer>("Monsters").Objects);
-            var allObstacles = new List<TiledMapObject>(myMap.GetLayer<TiledMapObjectLayer>("obstacles").Objects);
-
-            enemies = allEnemies
-                .Select(enemy => (IEnemy)EntityFactory(enemy))
-                .Where((enemy) => enemy != null)
-                .ToList();
-
-            obstacles = allObstacles
-                .Select(obstacle => (IObstacle)EntityFactory(obstacle))
-                .Where(obstacle => obstacle != null)
-                .ToList();
-        }
-
-        private void DrawUI(int playerHealth)
-        {
-            for (int i = 0; i < playerHealth; i++)
-            {
-                spriteBatch.Draw(Store.textures.Get(TextureName.Heart), new Vector2(i * 63, 0), Color.White);
-            }
-        }
-
-        private bool DidCollide(IEntity otherEntity)
-        {
-            foreach (IObstacle o in obstacles)
-            {
-                int sum = o.Radius + otherEntity.Radius;
-                if (Vector2.Distance(o.HitPosition, otherEntity.Position) < sum)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void UpdateCamera() {
-            // Camera logic
-            float tempX = player.Position.X;
-            float tempY = player.Position.Y;
-            int camW = graphics.PreferredBackBufferWidth;
-            int camH = graphics.PreferredBackBufferHeight;
-            int mapW = myMap.WidthInPixels;
-            int mapH = myMap.HeightInPixels;
-
-            if (tempX < camW / 2)
-            {
-                tempX = camW / 2;
-            }
-
-            if (tempY < camH / 2)
-            {
-                tempY = camH / 2;
-            }
-
-            if (tempX > (mapW - (camW / 2)))
-            {
-                tempX = (mapW - (camW / 2));
-            }
-
-            if (tempY > (mapH - (camH / 2)))
-            {
-                tempY = (mapH - (camH / 2));
-            }
-
-            cam.LookAt(new Vector2(tempX, tempY));
-        }
-
-        private bool Bonked(IEntity entity1, IEntity entity2)
-        {
-            return Vector2.Distance(entity1.Position, entity2.Position) < entity1.Radius + entity2.Radius;
-        }
-
-        private void ResolveBullet(IEnemy bullet, List<IEnemy> enemies)
-        {
-            enemies.ForEach(enemy => {
-                if (Bonked(bullet, enemy))
-                {
-                    bullet.OnHit();
-                    enemy.OnHit();
-                }
-                if (DidCollide(bullet))
-                {
-                    bullet.OnHit();
-                }
-            });
-        }
-
-        private void ResolvePlayer(Player player, List<IEnemy> enemies) {
-            enemies.ForEach(enemy => {
-                if (Bonked(player, enemy))
-                {
-                    player.OnCollide();
-                    return;
-                }
-            });
+            var myMap = Content.Load<TiledMap>("Misc/Test2");
+            Store.scenes.Add(SceneName.Game, new GameScene(GraphicsDevice, myMap));
+            Store.scenes.ChangeScene(SceneName.Game);
         }
 
         protected override void Update(GameTime gameTime)
@@ -209,45 +81,14 @@ namespace NeutralChocolate
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            UpdateCamera();
-            mapRenderer.Update(gameTime);
-
-            // Run the update function for each entity.
-            enemies.ForEach(entity => entity.Update(gameTime, player.Position));
-            bullets.ForEach(entity => entity.Update(gameTime, player.Position));
-            player.Update(gameTime, player.Position);
-
-            // Check collisions
-            ResolvePlayer(player, enemies);
-            bullets.ForEach(bullet => ResolveBullet(bullet, enemies));
-
-            // Remove any necessary entities after collision resolution.
-            enemies.RemoveAll(entity => entity.Health <= 0);
-            bullets.RemoveAll(entity => entity.Health <= 0);
-
+            Store.scenes.Scene.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.ForestGreen);
-            mapRenderer.Draw(cam.GetViewMatrix());
-            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
-            player.Draw(spriteBatch);
-
-            enemies.ForEach(enemy => enemy.Draw(spriteBatch));
-            bullets.ForEach(bullet => bullet.Draw(spriteBatch));
-            obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
-
-            spriteBatch.End();
-
-            // Draw to screen space
-            spriteBatch.Begin(transformMatrix: Matrix.Identity);
-            PadPrinter.Print(spriteBatch, font);
-            DrawUI(player.Health);
-            spriteBatch.End();
-
+            Store.scenes.Scene.Draw(spriteBatch, font, GraphicsDevice);
             base.Draw(gameTime);
         }
     }
