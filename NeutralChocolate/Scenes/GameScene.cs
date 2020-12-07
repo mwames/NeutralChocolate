@@ -68,11 +68,15 @@ namespace NeutralChocolate
             // World space
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());
+            if (player.Health >0)
+            {
             player.Draw(spriteBatch);
+            
 
             enemies.ForEach(enemy => enemy.Draw(spriteBatch));
             bullets.ForEach(bullet => bullet.Draw(spriteBatch));
             obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
+            }
             spriteBatch.End();
 
             // Screen space

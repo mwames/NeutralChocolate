@@ -8,10 +8,14 @@ namespace NeutralChocolate
     {
         public void Update(GameTime gameTime)
         {
-      
+        if (Input.WasPressed(Keys.Enter))
+            {
+                Store.scenes.ChangeScene(SceneName.Game);
+            }
         }
         public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
         {
+            spriteBatch.Begin();
             string gameOverMessage = "- PAUSE -";
             graphicsDevice.Clear(Color.DarkCyan);
             spriteBatch.DrawString(
@@ -23,6 +27,7 @@ namespace NeutralChocolate
                 ),
                 Color.Black
                 );
+                spriteBatch.End();
         }
     }
 }

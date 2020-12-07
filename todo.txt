@@ -1,3 +1,4 @@
+To do:
 Change the world pixel view so things looks porportional and are easier to draw. i think 16 by 16 pixels   Stardew esq
 transitions between the screens like a fade thang
 build a in game menu for the character.
@@ -6,5 +7,9 @@ organize the game like breakout or new and improve way
 get boss monster
 Npc with chat box( npc movement optional)
 
-bugs
-still can move and shoot after death.
+
+bugs:
+tree/bush lost collision
+can walk outside of the map
+
+Polish:

@@ -70,10 +70,15 @@ namespace NeutralChocolate
         private void Shoot(Dir direction)
         {
             bullets.Add(new Projectile(position, direction));
+            Store.soundEffects.Get(SoundEffectName.Blip).Play();
         }
 
         public void Update(GameTime gameTime, Vector2 playerPos)
         {
+            if (Input.WasPressed(Keys.Enter))
+            {
+                Store.scenes.ChangeScene(SceneName.Pause);
+            }
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (health <= 0)
@@ -82,7 +87,11 @@ namespace NeutralChocolate
             }
 
             if (healthTimer > 0)
+            
                 healthTimer -= dt;
+
+            if (health >0)
+            {   
 
             gPrevious = gCurrent;
             gCurrent = GamePad.GetState(PlayerIndex.One);
@@ -129,6 +138,7 @@ namespace NeutralChocolate
 
             if (Input.WasPressed(Buttons.B))
                 Shoot(Dir.Right);
+            }
         }
 
         public void OnCollide() {
