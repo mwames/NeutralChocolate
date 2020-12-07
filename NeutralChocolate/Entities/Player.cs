@@ -40,26 +40,6 @@ namespace NeutralChocolate
             };
         }
 
-        private bool WasPressed(Buttons button)
-        {
-            return gCurrent.IsButtonDown(button) && !gPrevious.IsButtonDown(button);
-        }
-
-        private bool IsPressed(Buttons button)
-        {
-            return gCurrent.IsButtonDown(button);
-        }
-
-        private bool WasPressed(Keys key)
-        {
-            return kCurrent.IsKeyDown(key) && !kPrevious.IsKeyDown(key);
-        }
-
-        private bool IsPressed(Keys key)
-        {
-            return kCurrent.IsKeyDown(key);
-        }
-
         private AnimatedSprite GetAnimationFrame(Texture2D texture) {
             return new AnimatedSprite(texture, 1, 4);
         }
@@ -114,16 +94,16 @@ namespace NeutralChocolate
             var tempPos = position;
             var distanceToTravel = speed * dt;
 
-            if (IsPressed(Buttons.LeftThumbstickUp) || IsPressed(Keys.Up))
+            if (Input.IsPressed(Buttons.LeftThumbstickUp) || Input.IsPressed(Keys.Up))
                 Move(Dir.Up, distanceToTravel);
 
-            if (IsPressed(Buttons.LeftThumbstickDown) || IsPressed(Keys.Down))
+            if (Input.IsPressed(Buttons.LeftThumbstickDown) || Input.IsPressed(Keys.Down))
                 Move(Dir.Down, distanceToTravel);
 
-            if (IsPressed(Buttons.LeftThumbstickLeft) || IsPressed(Keys.Left))
+            if (Input.IsPressed(Buttons.LeftThumbstickLeft) || Input.IsPressed(Keys.Left))
                 Move(Dir.Left, distanceToTravel);
 
-            if (IsPressed(Buttons.LeftThumbstickRight) || IsPressed(Keys.Right))
+            if (Input.IsPressed(Buttons.LeftThumbstickRight) || Input.IsPressed(Keys.Right))
                 Move(Dir.Right, distanceToTravel);
 
             if (isMoving)
@@ -135,19 +115,19 @@ namespace NeutralChocolate
                 Animation.setFrame(1);
             }
 
-            if (WasPressed(Keys.Space))
+            if (Input.WasPressed(Keys.Space))
                 Shoot(direction);
 
-            if (WasPressed(Buttons.Y))
+            if (Input.WasPressed(Buttons.Y))
                 Shoot(Dir.Up);
 
-            if (WasPressed(Buttons.A))
+            if (Input.WasPressed(Buttons.A))
                 Shoot(Dir.Down);
 
-            if (WasPressed(Buttons.X))
+            if (Input.WasPressed(Buttons.X))
                 Shoot(Dir.Left);
 
-            if (WasPressed(Buttons.B))
+            if (Input.WasPressed(Buttons.B))
                 Shoot(Dir.Right);
         }
 

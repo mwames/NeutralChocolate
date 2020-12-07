@@ -78,9 +78,10 @@ namespace NeutralChocolate
 
         protected override void Update(GameTime gameTime)
         {
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            Input.Update();
+            if (Input.WasPressed(Buttons.Back) || Input.WasPressed(Keys.Escape))
                 Exit();
+
             Store.scenes.Scene.Update(gameTime);
             base.Update(gameTime);
         }
