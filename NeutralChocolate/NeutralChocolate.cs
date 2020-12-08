@@ -71,8 +71,9 @@ namespace NeutralChocolate
             Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
             Store.songs.Play(SongName.Overworld);
 
-            var myMap = Content.Load<TiledMap>("Misc/Test2");
-            Store.scenes.Add(SceneName.Game, new GameScene(GraphicsDevice, myMap));
+            var overworldMap = Content.Load<TiledMap>("Misc/Test2");
+            var townMap = Content.Load<TiledMap>("Misc/Town1");
+            Store.scenes.Add(SceneName.Game, new GameScene(GraphicsDevice, overworldMap));
             Store.scenes.ChangeScene(SceneName.Game);
         }
 

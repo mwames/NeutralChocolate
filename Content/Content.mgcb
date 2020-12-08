@@ -86,6 +86,11 @@
 /processor:TiledMapProcessor
 /build:Misc/Test2.tmx
 
+#begin Misc/Town1.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Misc/Town1.tmx
+
 #begin Obsticales/bush.png
 /importer:TextureImporter
 /processor:TextureProcessor
