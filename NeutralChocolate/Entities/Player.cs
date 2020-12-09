@@ -73,7 +73,7 @@ namespace NeutralChocolate
             Store.soundEffects.Get(SoundEffectName.Blip).Play();
         }
 
-        public void Update(GameTime gameTime, Vector2 playerPos)
+        public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)
         {
             if (Input.WasPressed(Keys.Enter))
             {
@@ -139,6 +139,24 @@ namespace NeutralChocolate
             if (Input.WasPressed(Buttons.B))
                 Shoot(Dir.Right);
             }
+            if(position.X < 0)
+            {
+                position.X = 0;
+            }
+
+            if(position.Y < 0)
+            {
+                position.Y = 0;
+            }
+
+            if(position.X + Store.textures.Get(TextureName.PlayerRight).Width >mapW)
+            {
+                position.X = mapW - Store.textures.Get(TextureName.PlayerRight).Width;// still requires tweaking
+            }
+             if(position.Y + Store.textures.Get(TextureName.PlayerRight).Height >mapH)
+            {
+                position.Y = mapH - Store.textures.Get(TextureName.PlayerRight).Height;
+            }
         }
 
         public void OnCollide() {
@@ -150,7 +168,7 @@ namespace NeutralChocolate
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Animation.Draw(spriteBatch, new Vector2(Position.X - 48, Position.Y - 48));
+            Animation.Draw(spriteBatch, new Vector2(Position.X, Position.Y));
         }
     }
 }

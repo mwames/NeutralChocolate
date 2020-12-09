@@ -5,7 +5,7 @@ namespace NeutralChocolate {
     public interface IEntity {
         Vector2 Position { get; }
         int Radius { get; }
-        void Update(GameTime gameTime, Vector2 playerPos);
+        void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH);
         void Draw(SpriteBatch spriteBatch);
     }
 

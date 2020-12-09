@@ -46,13 +46,14 @@ namespace NeutralChocolate
         }
         public void Update(GameTime gameTime)
         {
+            player.Update(gameTime, player.Position, map.WidthInPixels,map.HeightInPixels);
             UpdateCamera();
             renderer.Update(gameTime);
 
             // Run the update function for each entity.
-            enemies.ForEach(entity => entity.Update(gameTime, player.Position));
-            bullets.ForEach(entity => entity.Update(gameTime, player.Position));
-            player.Update(gameTime, player.Position);
+            enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0,0));
+            bullets.ForEach(entity => entity.Update(gameTime, player.Position,0,0));
+            
 
             // Check collisions
             ResolvePlayer(player, enemies);

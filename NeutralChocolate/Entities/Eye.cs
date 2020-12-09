@@ -26,7 +26,7 @@ namespace NeutralChocolate
             health = 5;
         }
 
-        public void Update(GameTime gameTime, Vector2 playerPos)
+        public void Update(GameTime gameTime, Vector2 playerPos, int maapW, int maapH)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
