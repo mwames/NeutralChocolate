@@ -43,7 +43,6 @@ namespace NeutralChocolate
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
-            Store.scenes.Add(SceneName.Pause, new PauseScene());
 
             font = Content.Load<SpriteFont>("gameFont");
             Winder.Initialize(Window, font);
@@ -67,6 +66,8 @@ namespace NeutralChocolate
             Store.textures.Add(TextureName.Eye, Content.Load<Texture2D>("Enemies/eyeEnemy"));
             Store.textures.Add(TextureName.Snake, Content.Load<Texture2D>("Enemies/snakeEnemy"));
             Store.textures.Add(TextureName.Heart, Content.Load<Texture2D>("Misc/heart"));
+            Store.textures.Add(TextureName.PlayButton, Content.Load<Texture2D>("Misc/PlayButton"));
+            Store.textures.Add(TextureName.OptionsButton, Content.Load<Texture2D>("Misc/OptionsButton"));
             Store.soundEffects.Add(SoundEffectName.Blip, Content.Load<SoundEffect>("Sounds/blip"));
             Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
             Store.songs.Play(SongName.Overworld);
@@ -74,7 +75,9 @@ namespace NeutralChocolate
             var overworldMap = Content.Load<TiledMap>("Misc/Test2");
             var townMap = Content.Load<TiledMap>("Misc/Town1");
             Store.scenes.Add(SceneName.Game, new GameScene(GraphicsDevice, overworldMap));
-            Store.scenes.ChangeScene(SceneName.Game);
+            Store.scenes.Add(SceneName.Pause, new PauseScene());
+            Store.scenes.Add(SceneName.TitleScene, new TitleScene());
+            Store.scenes.ChangeScene(SceneName.TitleScene);
         }
 
         protected override void Update(GameTime gameTime)

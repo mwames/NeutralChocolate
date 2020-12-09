@@ -65,6 +65,7 @@ namespace NeutralChocolate
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
         {
+            
             // World space
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());

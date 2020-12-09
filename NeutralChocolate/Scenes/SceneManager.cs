@@ -5,7 +5,7 @@ namespace NeutralChocolate
 {
     public enum SceneName
     {
-        Title,
+        TitleScene,
         Game,
         GameOver,
         Pause,

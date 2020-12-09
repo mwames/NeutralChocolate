@@ -16,6 +16,8 @@ namespace NeutralChocolate
         PlayerDown,
         PlayerLeft,
         PlayerRight,
+        PlayButton,
+        OptionsButton,
     }
 
     public class TextureManager
