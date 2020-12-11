@@ -33,10 +33,10 @@ namespace NeutralChocolate
 
         public void Initialize() {
             animations = new[] {
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerDown), 1, 4),
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerUp), 1, 4),
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerLeft), 1, 4),
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerRight), 1, 4)
+                new AnimatedSprite(Art.PlayerDown, 1, 4),
+                new AnimatedSprite(Art.PlayerUp, 1, 4),
+                new AnimatedSprite(Art.PlayerLeft, 1, 4),
+                new AnimatedSprite(Art.PlayerRight, 1, 4)
             };
         }
 
@@ -149,13 +149,13 @@ namespace NeutralChocolate
                 position.Y = 0;
             }
 
-            if(position.X + Store.textures.Get(TextureName.PlayerRight).Width >mapW)
+            if(position.X + Art.PlayerRight.Width >mapW)
             {
-                position.X = mapW - Store.textures.Get(TextureName.PlayerRight).Width;// still requires tweaking
+                position.X = mapW - Art.PlayerRight.Width;// still requires tweaking
             }
-             if(position.Y + Store.textures.Get(TextureName.PlayerRight).Height >mapH)
+             if(position.Y + Art.PlayerRight.Height >mapH)
             {
-                position.Y = mapH - Store.textures.Get(TextureName.PlayerRight).Height;
+                position.Y = mapH - Art.PlayerRight.Height;
             }
         }
 

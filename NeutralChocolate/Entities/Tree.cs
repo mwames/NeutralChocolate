@@ -18,7 +18,7 @@ namespace NeutralChocolate
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH) { }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Store.textures.Get(TextureName.Tree), position, Color.White);
+            spriteBatch.Draw(Art.Tree, position, Color.White);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace NeutralChocolate
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Store.textures.Get(TextureName.Eye), position, Color.White);
+            spriteBatch.Draw(Art.Eye, position, Color.White);
         }
 
         public void OnHit()

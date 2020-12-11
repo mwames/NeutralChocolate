@@ -39,7 +39,7 @@ namespace NeutralChocolate
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Store.textures.Get(TextureName.Snake), position, Color.White);
+            spriteBatch.Draw(Art.Snake, position, Color.White);
         }
 
         public void OnHit()
