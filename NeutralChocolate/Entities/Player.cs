@@ -14,6 +14,7 @@ namespace NeutralChocolate
         private Dir direction = Dir.Down;
         private float healthTimer = 0f;
         private bool isMoving = false;
+        private Texture2D Texture => Store.textures.Get(TextureName.Player);
         private KeyboardState kStateOld = Keyboard.GetState();
         private AnimatedSprite[] animations;
         private AnimatedSprite Animation => animations[(int)direction];
@@ -22,6 +23,7 @@ namespace NeutralChocolate
         private KeyboardState kPrevious;
         private KeyboardState kCurrent;
         private List<IEnemy> bullets;
+        private Collider collider;
 
         public int Radius => RADIUS;
         public Vector2 Position => position;
@@ -29,6 +31,14 @@ namespace NeutralChocolate
 
         public Player(List<IEnemy> bullets) {
             this.bullets = bullets;
+            this.collider = new Collider(
+                new Rectangle(
+                    (int)position.X,
+                    (int)position.Y,
+                    Texture.Width,
+                    Texture.Height
+                )
+            );
         }
 
         public void Initialize() {
@@ -90,7 +100,7 @@ namespace NeutralChocolate
             
                 healthTimer -= dt;
 
-            if (health >0)
+            if (health > 0)
             {   
 
             gPrevious = gCurrent;
@@ -139,6 +149,7 @@ namespace NeutralChocolate
             if (Input.WasPressed(Buttons.B))
                 Shoot(Dir.Right);
             }
+
             if(position.X < 0)
             {
                 position.X = 0;
@@ -149,14 +160,18 @@ namespace NeutralChocolate
                 position.Y = 0;
             }
 
-            if(position.X + Store.textures.Get(TextureName.PlayerRight).Width >mapW)
+            var playerTexture = Store.textures.Get(TextureName.Player);
+
+            if(position.X + playerTexture.Width > mapW)
             {
-                position.X = mapW - Store.textures.Get(TextureName.PlayerRight).Width;// still requires tweaking
+                position.X = mapW - playerTexture.Width;
             }
-             if(position.Y + Store.textures.Get(TextureName.PlayerRight).Height >mapH)
+             if(position.Y + playerTexture.Height > mapH)
             {
-                position.Y = mapH - Store.textures.Get(TextureName.PlayerRight).Height;
+                position.Y = mapH - playerTexture.Height;
             }
+
+            collider.Update(gameTime, position, mapW, mapH);
         }
 
         public void OnCollide() {
@@ -168,7 +183,10 @@ namespace NeutralChocolate
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Animation.Draw(spriteBatch, new Vector2(Position.X, Position.Y));
+            if (Store.modes.currentMode == Mode.Collider) {
+                collider.Draw(spriteBatch);
+            }
+            Animation.Draw(spriteBatch, new Vector2(Position.X - 20, Position.Y - 17));
         }
     }
 }

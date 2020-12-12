@@ -40,6 +40,7 @@ namespace NeutralChocolate
             Store.textures = new TextureManager();
             Store.soundEffects = new SoundEffectManager();
             Store.songs = new SongManager();
+            Store.modes = new ModeManager();
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
@@ -56,6 +57,7 @@ namespace NeutralChocolate
             player_Sprite = Content.Load<Texture2D>("Player/player");
 
             // these are ordered in the same way as the enum up top to condense animation code on player class
+            Store.textures.Add(TextureName.Player, Content.Load<Texture2D>("Player/player"));
             Store.textures.Add(TextureName.PlayerUp, Content.Load<Texture2D>("Player/playerUp"));
             Store.textures.Add(TextureName.PlayerDown, Content.Load<Texture2D>("Player/playerDown"));
             Store.textures.Add(TextureName.PlayerLeft, Content.Load<Texture2D>("Player/playerLeft"));
@@ -68,6 +70,8 @@ namespace NeutralChocolate
             Store.textures.Add(TextureName.Heart, Content.Load<Texture2D>("Misc/heart"));
             Store.textures.Add(TextureName.PlayButton, Content.Load<Texture2D>("Misc/PlayButton"));
             Store.textures.Add(TextureName.OptionsButton, Content.Load<Texture2D>("Misc/OptionsButton"));
+            Store.textures.Add(TextureName.Pixel, Content.Load<Texture2D>("pixel"));
+
             Store.soundEffects.Add(SoundEffectName.Blip, Content.Load<SoundEffect>("Sounds/blip"));
             Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
             Store.songs.Play(SongName.Overworld);
@@ -85,6 +89,8 @@ namespace NeutralChocolate
             Input.Update();
             if (Input.WasPressed(Buttons.Back) || Input.WasPressed(Keys.Escape))
                 Exit();
+            if (Input.WasPressed(Keys.F1))
+                Store.modes.Toggle(Mode.Collider);
 
             Store.scenes.Scene.Update(gameTime);
             base.Update(gameTime);

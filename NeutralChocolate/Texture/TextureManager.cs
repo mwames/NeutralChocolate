@@ -12,12 +12,14 @@ namespace NeutralChocolate
         Snake,
         Eye,
         Heart,
+        Player,
         PlayerUp,
         PlayerDown,
         PlayerLeft,
         PlayerRight,
         PlayButton,
         OptionsButton,
+        Pixel,
     }
 
     public class TextureManager

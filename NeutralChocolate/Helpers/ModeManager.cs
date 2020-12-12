@@ -6,6 +6,7 @@ namespace NeutralChocolate
     {
         Normal,
         Debug,
+        Collider,
         Editor
     }
 
@@ -19,7 +20,7 @@ namespace NeutralChocolate
     public class ModeManager
     {
         public Mode currentMode = Mode.Normal;
-        public HashSet<DebugOptions> enabledOptions = new HashSet<DebugOptions>();
+        private HashSet<DebugOptions> enabledOptions = new HashSet<DebugOptions>();
 
         public void ToggleDebugOption(DebugOptions option)
         {

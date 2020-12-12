@@ -70,7 +70,7 @@ namespace NeutralChocolate
             // World space
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());
-            if (player.Health >0)
+            if (player.Health > 0)
             {
             player.Draw(spriteBatch);
             
