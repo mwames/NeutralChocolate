@@ -14,7 +14,7 @@ namespace NeutralChocolate
 
         public Vector2 Position => new Vector2(bounds.Left, bounds.Top);
         public int Radius => bounds.Width;
-        public Texture2D Texture => Store.textures.Get(TextureName.Pixel);
+        public Texture2D Texture => Art.Pixel;
 
         // Draws the outline of the collider
         public void Draw(SpriteBatch spriteBatch)

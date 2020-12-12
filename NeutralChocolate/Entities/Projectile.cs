@@ -54,7 +54,7 @@ namespace NeutralChocolate
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Store.textures.Get(TextureName.Bullet), position, Color.White);
+            spriteBatch.Draw(Art.Bullet, position, Color.White);
         }
 
         public void OnHit()

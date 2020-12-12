@@ -47,7 +47,7 @@ namespace NeutralChocolate
             graphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
             spriteBatch.Draw(
-              Store.textures.Get(TextureName.PlayerDown),
+              Art.PlayerDown,
               new Rectangle(0, MARGIN_TOP, Winder.Width, Winder.Height / 2),
                 Color.White
              );
@@ -55,7 +55,7 @@ namespace NeutralChocolate
             var startColor = start ? Color.Yellow : Color.White;
             var optionsColor = options ? Color.Yellow : Color.White;
 
-            var playButton = Store.textures.Get(TextureName.PlayButton);
+            var playButton = Art.PlayButton;
             spriteBatch.Draw(
                 playButton,
                 new Rectangle((Winder.Width / 2) - 96 - 10, (Winder.Height / 2) + MARGIN_TOP * 2, 96, 54),
@@ -63,7 +63,7 @@ namespace NeutralChocolate
             );
 
             spriteBatch.Draw(
-                Store.textures.Get(TextureName.OptionsButton),
+                Art.OptionsButton,
                 new Rectangle((Winder.Width / 2) + 10, Winder.Height / 2 + MARGIN_TOP * 2, 110, 54),
                 optionsColor
             );

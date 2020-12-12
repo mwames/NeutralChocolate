@@ -8,13 +8,14 @@ namespace NeutralChocolate
     class Player : IEntity
     {
         private readonly int RADIUS = 56;
+        private readonly int WIDTH = 58;
+        private readonly int HEIGHT = 62;
         private Vector2 position = new Vector2(100, 100);
         private int health = 5;
         private int speed = 300;
         private Dir direction = Dir.Down;
         private float healthTimer = 0f;
         private bool isMoving = false;
-        private Texture2D Texture => Store.textures.Get(TextureName.Player);
         private KeyboardState kStateOld = Keyboard.GetState();
         private AnimatedSprite[] animations;
         private AnimatedSprite Animation => animations[(int)direction];
@@ -35,18 +36,18 @@ namespace NeutralChocolate
                 new Rectangle(
                     (int)position.X,
                     (int)position.Y,
-                    Texture.Width,
-                    Texture.Height
+                    WIDTH,
+                    HEIGHT
                 )
             );
         }
 
         public void Initialize() {
             animations = new[] {
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerDown), 1, 4),
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerUp), 1, 4),
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerLeft), 1, 4),
-                new AnimatedSprite(Store.textures.Get(TextureName.PlayerRight), 1, 4)
+                new AnimatedSprite(Art.PlayerDown, 1, 4),
+                new AnimatedSprite(Art.PlayerUp, 1, 4),
+                new AnimatedSprite(Art.PlayerLeft, 1, 4),
+                new AnimatedSprite(Art.PlayerRight, 1, 4)
             };
         }
 
@@ -160,15 +161,13 @@ namespace NeutralChocolate
                 position.Y = 0;
             }
 
-            var playerTexture = Store.textures.Get(TextureName.Player);
-
-            if(position.X + playerTexture.Width > mapW)
+            if(position.X + HEIGHT > mapW)
             {
-                position.X = mapW - playerTexture.Width;
+                position.X = mapW - WIDTH;
             }
-             if(position.Y + playerTexture.Height > mapH)
+             if(position.Y + HEIGHT > mapH)
             {
-                position.Y = mapH - playerTexture.Height;
+                position.Y = mapH - HEIGHT;
             }
 
             collider.Update(gameTime, position, mapW, mapH);

@@ -85,7 +85,7 @@ namespace NeutralChocolate
             spriteBatch.Begin();
             for (int i = 0; i < player.Health; i++)
             {
-                spriteBatch.Draw(Store.textures.Get(TextureName.Heart), new Vector2(i * 63, 0), Color.White);
+                spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
             }
             spriteBatch.End();
         }
