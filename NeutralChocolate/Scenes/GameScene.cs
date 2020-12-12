@@ -5,6 +5,7 @@ using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.Tiled;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Media;
 
 namespace NeutralChocolate
 {
@@ -19,6 +20,7 @@ namespace NeutralChocolate
         private List<IEnemy> bullets = new List<IEnemy>();
         public GameScene(GraphicsDevice graphicsDevice, TiledMap map)
         {
+            MediaPlayer.Play(Sound.Overworld);
             this.map = map;
             this.renderer = new TiledMapRenderer(graphicsDevice);
             renderer.LoadMap(map);
@@ -26,10 +28,8 @@ namespace NeutralChocolate
             cam = new OrthographicCamera(graphicsDevice);
             player = new Player(bullets);
 
-
-
             player.Initialize();
-
+            
             //if object ref not found, make sure you are pulling the latest tiled map version. 
             var allEnemies = new List<TiledMapObject>(map.GetLayer<TiledMapObjectLayer>("Monsters").Objects);
             var allObstacles = new List<TiledMapObject>(map.GetLayer<TiledMapObjectLayer>("obstacles").Objects);
@@ -54,7 +54,6 @@ namespace NeutralChocolate
             enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0,0));
             bullets.ForEach(entity => entity.Update(gameTime, player.Position,0,0));
             
-
             // Check collisions
             ResolvePlayer(player, enemies);
             bullets.ForEach(bullet => ResolveBullet(bullet, enemies));

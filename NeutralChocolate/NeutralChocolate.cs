@@ -24,9 +24,7 @@ namespace NeutralChocolate
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-        //private Texture2D player_Sprite;
-
-
+        
         public NeutralChocolate()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -38,8 +36,8 @@ namespace NeutralChocolate
         {
             Store.scenes= new SceneManager();
             //Store.textures = new TextureManager();
-            Store.soundEffects = new SoundEffectManager();
-            Store.songs = new SongManager();
+            //Store.soundEffects = new SoundEffectManager();
+            //Store.songs = new SongManager();
             Store.modes = new ModeManager();
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
@@ -54,11 +52,8 @@ namespace NeutralChocolate
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Art.Load(Content);  
-            
-            Store.soundEffects.Add(SoundEffectName.Blip, Content.Load<SoundEffect>("Sounds/blip"));
-            Store.songs.Add(SongName.Overworld, Content.Load<Song>("Sounds/nature")); // should be Sounds/nature
-            Store.songs.Play(SongName.Overworld);
-
+            Sound.Load(Content);
+           
             var overworldMap = Content.Load<TiledMap>("Misc/Test2");
             var townMap = Content.Load<TiledMap>("Misc/Town1");
             Store.scenes.Add(SceneName.Game, new GameScene(GraphicsDevice, overworldMap));

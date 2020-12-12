@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace NeutralChocolate
 {
@@ -81,7 +82,7 @@ namespace NeutralChocolate
         private void Shoot(Dir direction)
         {
             bullets.Add(new Projectile(position, direction));
-            Store.soundEffects.Get(SoundEffectName.Blip).Play();
+            Sound.Blip.Play();
         }
 
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)
@@ -92,11 +93,7 @@ namespace NeutralChocolate
             }
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (health <= 0)
-            {
-                Store.songs.Stop();
-            }
-
+         
             if (healthTimer > 0)
             
                 healthTimer -= dt;

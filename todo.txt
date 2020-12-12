@@ -10,6 +10,7 @@ Npc with chat box( npc movement optional)
 
 bugs:
 tree/bush lost collision
-can walk outside of the map
+Can't shoot and walk diag upleft
+overworld music plays everywhere
 
 Polish:
