@@ -11,11 +11,30 @@ namespace NeutralChocolate
         readonly int MARGIN_TOP = 75;
         public bool options = false;
         public bool start = true;
-        
+        int mAlphaValue = 1;
+        int mFadeIncrement = 3;
+        double mFadeDelay = .035;
 
         public void Update(GameTime gameTime)
         {
-          
+           mFadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+            if (mFadeDelay <= 0)
+            {
+                //Reset the Fade delay
+                mFadeDelay = .035;
+ 
+                //Increment/Decrement the fade value for the image
+                mAlphaValue += mFadeIncrement;
+ 
+                //If the AlphaValue is equal or above the max Alpha value or
+                //has dropped below or equal to the min Alpha value, then 
+                
+                //reverse the fade
+                // if (mAlphaValue >= 255 || mAlphaValue <= 0)
+                // {
+                //     mFadeIncrement *= -1;
+                // }
+            }
 
             if (Input.WasPressed(Keys.Right) || Input.WasPressed(Buttons.DPadRight))
             {
@@ -44,12 +63,12 @@ namespace NeutralChocolate
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
         {
-            graphicsDevice.Clear(Color.White);
+            graphicsDevice.Clear(Color.LightSkyBlue);
             spriteBatch.Begin();
             spriteBatch.Draw(
               Art.PlayerDown,
               new Rectangle(0, MARGIN_TOP, Winder.Width, Winder.Height / 2),
-                Color.White
+                new Color(255,255,255,MathHelper.Clamp(mAlphaValue, 0,255))
              );
 
             var startColor = start ? Color.Yellow : Color.White;
