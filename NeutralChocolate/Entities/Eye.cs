@@ -14,26 +14,37 @@ namespace NeutralChocolate
             get { return health; }
             set { health = value; }
         }
-
+        double stopTime =0d;
+        private bool move = true;
         public Vector2 Position => position;
         public int Radius => radius;
 
         public Eye(Vector2 position)
         {
             this.position = position;
-            speed = 88;
+            speed = 200;
             radius = 45;
             health = 5;
         }
 
         public void Update(GameTime gameTime, Vector2 playerPos, int maapW, int maapH)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if(move)
+            {
+                Vector2 moveDir = playerPos - position;
+                moveDir.Normalize();
+                position += moveDir * speed * dt;
+            }
 
-            Vector2 moveDir = playerPos - position;
-            moveDir.Normalize();
-
-            position += moveDir * speed * dt;
+            if(stopTime <=0)
+            {
+                stopTime = stopTime + dt;
+            }
+            else 
+            {
+                 move =true;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -44,6 +55,8 @@ namespace NeutralChocolate
         public void OnHit()
         {
             health -= 1;
+            move = false;
+            stopTime = -0.5d;
         }
     }
 }

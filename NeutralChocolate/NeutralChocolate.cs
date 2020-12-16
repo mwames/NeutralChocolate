@@ -11,14 +11,6 @@ using System.Linq;
 
 namespace NeutralChocolate
 {
-    enum Dir
-    {
-        Down,
-        Up,
-        Left,
-        Right
-    }
-
     public class NeutralChocolate : Game
     {
         private GraphicsDeviceManager graphics;

@@ -6,6 +6,14 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace NeutralChocolate
 {
+     enum Dir
+    {
+        Down,
+        Up,
+        Left,
+        Right
+    }
+
     class Player : IEntity
     {
         private readonly int RADIUS = 56;

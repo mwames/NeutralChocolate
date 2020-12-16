@@ -15,7 +15,8 @@ namespace NeutralChocolate
             get { return health; }
             set { health = value; }
         }
-
+         double stopTime = 0d;
+        private bool move = true;
         public Vector2 Position => position;
         public int Radius => radius;
 
@@ -30,21 +31,33 @@ namespace NeutralChocolate
 
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if(move)
+            {
+                Vector2 moveDir = playerPos - position;
+                moveDir.Normalize();
+                position += moveDir * speed * dt;
+            }
 
-            Vector2 moveDir = playerPos - position;
-            moveDir.Normalize();
-
-            position += moveDir * speed * dt;
+            if(stopTime <=0)
+            {
+                stopTime = stopTime + dt;
+            }
+            else 
+            {
+                 move =true;
+            }
         }
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Art.Snake, position, Color.White);
         }
 
-        public void OnHit()
+         public void OnHit()
         {
             health -= 1;
+            move = false;
+            stopTime = -0.5d;
         }
     }
 }
