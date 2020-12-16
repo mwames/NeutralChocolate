@@ -51,6 +51,7 @@ namespace NeutralChocolate
             Store.scenes.Add(SceneName.Game, new GameScene(GraphicsDevice, overworldMap));
             Store.scenes.Add(SceneName.Pause, new PauseScene());
             Store.scenes.Add(SceneName.TitleScene, new TitleScene());
+            Store.scenes.Add(SceneName.GameOver, new GameOverScene());
             Store.scenes.ChangeScene(SceneName.TitleScene);
         }
 

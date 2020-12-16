@@ -78,6 +78,10 @@ namespace NeutralChocolate
             bullets.ForEach(bullet => bullet.Draw(spriteBatch));
             obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
             }
+            else
+            {
+                Store.scenes.ChangeScene(SceneName.GameOver);
+            }
             spriteBatch.End();
 
             // Screen space

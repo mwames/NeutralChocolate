@@ -14,6 +14,7 @@ namespace NeutralChocolate
         {
         Overworld = content.Load<Song>("Sounds/nature");
         Blip = content.Load<SoundEffect>("Sounds/Blip");
+        MediaPlayer.IsRepeating = true;
         }
     }
 }

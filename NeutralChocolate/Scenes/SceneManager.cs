@@ -10,7 +10,6 @@ namespace NeutralChocolate
         GameOver,
         Pause,
         Editor,
-        Death,
         Options
     }
 

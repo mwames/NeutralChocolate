@@ -1,16 +1,17 @@
 To do:
 Change the world pixel view so things looks porportional and are easier to draw. i think 16 by 16 pixels   Stardew esq
 transitions between the screens like a fade thang
-build a in game menu for the character.
+build an in game menu for the character.
 build town, and large area
 organize the game like breakout or new and improve way
 get boss monster
 Npc with chat box( npc movement optional)
+a new game is created when using the title screen
 
 
 bugs:
 tree/bush lost collision
 Can't shoot and walk diag upleft
-overworld music plays everywhere
+overworld music plays everywhere(side effect of the sound class?)
 
 Polish:
