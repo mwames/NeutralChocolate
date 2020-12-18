@@ -36,25 +36,25 @@ namespace NeutralChocolate
                 // }
             }
 
-            if (Input.WasPressed(Keys.Right) || Input.WasPressed(Buttons.DPadRight))
+            if (Input.WasPressed(Keys.Right) || Input.WasPressed(Buttons.LeftThumbstickRight))
             {
                 options = true;
                 start = false;
             }
 
-            if (Input.WasPressed(Keys.Left) || Input.WasPressed(Buttons.DPadLeft))
+            if (Input.WasPressed(Keys.Left) || Input.WasPressed(Buttons.LeftThumbstickLeft))
             {
                 options = false;
                 start = true;
             }
 
-            if (start == true && (Input.WasPressed(Keys.Enter) || Input.WasPressed(Buttons.Start)))
+            if (start == true && (Input.WasPressed(Keys.Enter) || Input.WasPressed(Buttons.Start) || Input.WasPressed(Buttons.B)))
             {
                 options = false;
                 Store.scenes.ChangeScene(SceneName.Game);
             }
 
-            if (options == true && (Input.WasPressed(Keys.Enter) || Input.WasPressed(Buttons.Start)))
+            if (options == true && (Input.WasPressed(Keys.Enter) || Input.WasPressed(Buttons.Start) || Input.WasPressed(Buttons.B)))
             {
                 start = false;
                 Store.scenes.ChangeScene(SceneName.Game); // todo  come up with options and build the screen

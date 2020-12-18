@@ -9,13 +9,14 @@ namespace NeutralChocolate
         private int health;
         private int speed;
         private int radius;
+        private float healthTimer = 0;
 
         public int Health
         {
             get { return health; }
             set { health = value; }
         }
-         double stopTime = 0d;
+        double stopTime = 0d;
         private bool move = true;
         public Vector2 Position => position;
         public int Radius => radius;
@@ -47,6 +48,10 @@ namespace NeutralChocolate
             {
                  move =true;
             }
+
+           if (healthTimer > 0)
+            
+                healthTimer -= dt;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -54,10 +59,15 @@ namespace NeutralChocolate
         }
 
          public void OnHit()
-        {
+         {
+         if (healthTimer <=0)
+            {
             health -= 1;
             move = false;
             stopTime = -0.5d;
-        }
+            healthTimer = .5f;
+            speed = speed + 75;
+            }
+         }
     }
-}
+} 

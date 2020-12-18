@@ -24,6 +24,7 @@ namespace NeutralChocolate
         private int speed = 300;
         private Dir direction = Dir.Down;
         private float healthTimer = 0f;
+        private float shootRate = 0f;
         private bool isMoving = false;
         private KeyboardState kStateOld = Keyboard.GetState();
         private AnimatedSprite[] animations;
@@ -89,8 +90,12 @@ namespace NeutralChocolate
 
         private void Shoot(Dir direction)
         {
+            if(shootRate<= 0)
+            {
             bullets.Add(new Projectile(position, direction));
             Sound.Blip.Play();
+            shootRate = .4f;
+            }
         }
 
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)
@@ -101,59 +106,66 @@ namespace NeutralChocolate
             }
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            if (shootRate > 0)
+            
+                shootRate -= dt;
          
             if (healthTimer > 0)
             
                 healthTimer -= dt;
 
+                if (shootRate > 0)
+            
+                shootRate -= dt;
+
             if (health > 0)
             {   
 
-            gPrevious = gCurrent;
-            gCurrent = GamePad.GetState(PlayerIndex.One);
+                gPrevious = gCurrent;
+                gCurrent = GamePad.GetState(PlayerIndex.One);
 
-            kPrevious = kCurrent;
-            kCurrent = Keyboard.GetState();
+                kPrevious = kCurrent;
+                kCurrent = Keyboard.GetState();
 
-            isMoving = false;
-            var tempPos = position;
-            var distanceToTravel = speed * dt;
+                isMoving = false;
+                var tempPos = position;
+                var distanceToTravel = speed * dt;
 
-            if (Input.IsPressed(Buttons.LeftThumbstickUp) || Input.IsPressed(Keys.Up))
-                Move(Dir.Up, distanceToTravel);
+                if (Input.IsPressed(Buttons.LeftThumbstickUp) || Input.IsPressed(Keys.Up))
+                    Move(Dir.Up, distanceToTravel);
 
-            if (Input.IsPressed(Buttons.LeftThumbstickDown) || Input.IsPressed(Keys.Down))
-                Move(Dir.Down, distanceToTravel);
+                if (Input.IsPressed(Buttons.LeftThumbstickDown) || Input.IsPressed(Keys.Down))
+                    Move(Dir.Down, distanceToTravel);
 
-            if (Input.IsPressed(Buttons.LeftThumbstickLeft) || Input.IsPressed(Keys.Left))
-                Move(Dir.Left, distanceToTravel);
+                if (Input.IsPressed(Buttons.LeftThumbstickLeft) || Input.IsPressed(Keys.Left))
+                    Move(Dir.Left, distanceToTravel);
 
-            if (Input.IsPressed(Buttons.LeftThumbstickRight) || Input.IsPressed(Keys.Right))
-                Move(Dir.Right, distanceToTravel);
+                if (Input.IsPressed(Buttons.LeftThumbstickRight) || Input.IsPressed(Keys.Right))
+                    Move(Dir.Right, distanceToTravel);
 
-            if (isMoving)
-            {
-                Animation.Update(gameTime);
-            }
-            else
-            {
-                Animation.setFrame(1);
-            }
+                if (isMoving)
+                {
+                    Animation.Update(gameTime);
+                }
+                else
+                {
+                    Animation.setFrame(1);
+                }
 
-            if (Input.WasPressed(Keys.Space))
-                Shoot(direction);
+                if (Input.WasPressed(Keys.Space))
+                    Shoot(direction);
 
-            if (Input.WasPressed(Buttons.Y))
-                Shoot(Dir.Up);
+                else if (Input.WasPressed(Buttons.Y))
+                    Shoot(Dir.Up);
 
-            if (Input.WasPressed(Buttons.A))
-                Shoot(Dir.Down);
+                else if (Input.WasPressed(Buttons.A))
+                    Shoot(Dir.Down);
 
-            if (Input.WasPressed(Buttons.X))
-                Shoot(Dir.Left);
+                else if (Input.WasPressed(Buttons.X))
+                    Shoot(Dir.Left);
 
-            if (Input.WasPressed(Buttons.B))
-                Shoot(Dir.Right);
+                else if (Input.WasPressed(Buttons.B))
+                    Shoot(Dir.Right);
             }
 
             if(position.X < 0)
@@ -170,7 +182,7 @@ namespace NeutralChocolate
             {
                 position.X = mapW - WIDTH;
             }
-             if(position.Y + HEIGHT > mapH)
+            if(position.Y + HEIGHT > mapH)
             {
                 position.Y = mapH - HEIGHT;
             }
