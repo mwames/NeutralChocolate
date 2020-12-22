@@ -19,6 +19,7 @@ namespace NeutralChocolate
         public static Texture2D Heart { get; private set; }
         public static Texture2D PlayButton { get; private set; }
         public static Texture2D OptionsButton { get; private set; }
+        public static Texture2D Gold {get; private set;}
 
         public static void Load(ContentManager Content)
         {
@@ -35,6 +36,7 @@ namespace NeutralChocolate
             PlayButton = Content.Load<Texture2D>("Misc/PlayButton");
             OptionsButton = Content.Load<Texture2D>("Misc/OptionsButton");
             Pixel = Content.Load<Texture2D>("pixel");
+            Gold = Content.Load<Texture2D>("Misc/GoldBlock");
 
         }
     }

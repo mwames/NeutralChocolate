@@ -16,7 +16,7 @@ namespace NeutralChocolate
             get { return health; }
             set { health = value; }
         }
-        double stopTime = 0d;
+        private double stopTime = 0d;
         private bool move = true;
         public Vector2 Position => position;
         public int Radius => radius;

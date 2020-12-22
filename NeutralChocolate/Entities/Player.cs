@@ -94,7 +94,7 @@ namespace NeutralChocolate
             {
             bullets.Add(new Projectile(position, direction));
             Sound.Blip.Play();
-            shootRate = .4f;
+            shootRate = .2f;
             }
         }
 
@@ -113,10 +113,6 @@ namespace NeutralChocolate
             if (healthTimer > 0)
             
                 healthTimer -= dt;
-
-                if (shootRate > 0)
-            
-                shootRate -= dt;
 
             if (health > 0)
             {   

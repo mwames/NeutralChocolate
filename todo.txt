@@ -11,7 +11,10 @@ a new game is created when using the title screen
 
 bugs:
 tree/bush lost collision
-Can't shoot and walk diag upleft
+Can't shoot and walk diag upleft ( keyboard only)
 overworld music plays everywhere(side effect of the sound class?)
 
 Polish:
+loot table
+enemies drop gold, player can pick it up. 
+face direction of shooting
