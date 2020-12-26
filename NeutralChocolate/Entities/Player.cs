@@ -189,8 +189,11 @@ namespace NeutralChocolate
         public void OnCollide() {
             if (healthTimer <= 0) {
                 health--;
+               
                 healthTimer = 1.5f;
             }
+           
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)

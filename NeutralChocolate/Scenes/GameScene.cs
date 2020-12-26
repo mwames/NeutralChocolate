@@ -18,6 +18,7 @@ namespace NeutralChocolate
         private List<IEnemy> enemies = new List<IEnemy>();
         private List<IObstacle> obstacles = new List<IObstacle>();
         private List<IEnemy> bullets = new List<IEnemy>();
+      
         public GameScene(GraphicsDevice graphicsDevice, TiledMap map)
         {
             MediaPlayer.Play(Sound.Overworld);
@@ -61,6 +62,7 @@ namespace NeutralChocolate
             // Remove any necessary entities after collision resolution.
             enemies.RemoveAll(entity => entity.Health <= 0);
             bullets.RemoveAll(entity => entity.Health <= 0);
+            
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
@@ -82,6 +84,8 @@ namespace NeutralChocolate
             {
                 Store.scenes.ChangeScene(SceneName.GameOver);
             }
+
+            spriteBatch.Draw(Art.Tree, new Vector2(200,200),Color.Brown);
             spriteBatch.End();
 
             // Screen space

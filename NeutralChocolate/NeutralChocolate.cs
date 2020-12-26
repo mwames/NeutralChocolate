@@ -15,7 +15,8 @@ namespace NeutralChocolate
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private SpriteFont font;
+        public SpriteFont font;
+        public DialogBox _dialogBox;
         
         public NeutralChocolate()
         {
@@ -53,6 +54,17 @@ namespace NeutralChocolate
             Store.scenes.Add(SceneName.TitleScene, new TitleScene());
             Store.scenes.Add(SceneName.GameOver, new GameOverScene());
             Store.scenes.ChangeScene(SceneName.TitleScene);
+
+             _dialogBox = new DialogBox
+            {
+                Text = "Hello Gang! Press Y to proceed.\n" +
+                       "I will be on the next pane! " +
+                       "And wordwrap will occur, especially if there are some longer words!\n" +
+                       "After this dialog box finishes,  press O to open a new one."
+            };
+
+            // Initialize the dialog box (this also calls the Show() method)
+            _dialogBox.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
@@ -65,6 +77,18 @@ namespace NeutralChocolate
 
             Store.scenes.Scene.Update(gameTime);
             base.Update(gameTime);
+
+             _dialogBox.Update();
+
+            // Debug key to show opening a new dialog box on demand
+            if (Input.kCurrent.IsKeyDown(Keys.O))
+            {
+                if (!_dialogBox.Active)
+                {
+                    _dialogBox = new DialogBox {Text = "New dialog box! maybe the words will wrap"};
+                    _dialogBox.Initialize();
+                }
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -72,6 +96,13 @@ namespace NeutralChocolate
             GraphicsDevice.Clear(Color.ForestGreen);
             Store.scenes.Scene.Draw(spriteBatch, font, GraphicsDevice);
             base.Draw(gameTime);
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+
+            // Draw the dialog box to the screen
+            _dialogBox.Draw(spriteBatch);
+
+            spriteBatch.End();
         }
     }
 }
