@@ -36,10 +36,10 @@ namespace NeutralChocolate
         public int BorderWidth { get; set; }
 
         /// Background fill texture (built from FillColor)
-        private readonly Texture2D _fillTexture;
+        //private readonly Texture2D _fillTexture;
 
         /// Border fill texture (built from BorderColor)
-        private readonly Texture2D _borderTexture;
+       // public Texture2D _borderTexture;
 
         /// Collection of pages contained in this dialog box
         private List<string> _pages;
@@ -115,7 +115,7 @@ namespace NeutralChocolate
 
             Size = new Vector2(sizeX, sizeY);
 
-            var posX = Winder.Width - (Size.X/2f);
+            var posX = Winder.Width/2 - (Size.X/2f);
             var posY = Winder.Height - Size.Y - 30;
 
             Position = new Vector2(posX, posY);
@@ -123,7 +123,6 @@ namespace NeutralChocolate
 
         /// Initialize a dialog box
         /// - can be used to reset the current dialog box in case of "I didn't quite get that..."
-        /// <param name="text"></param>
         public void Initialize(string text = null)
         {
             Text = text ?? Text;
@@ -218,7 +217,6 @@ namespace NeutralChocolate
         }
 
         /// Whether the indicator should be visible or not
-        /// <returns></returns>
         private bool BlinkIndicator()
         {
             _interval = (int) Math.Floor((double) (_stopwatch.ElapsedMilliseconds%1000));
@@ -227,8 +225,6 @@ namespace NeutralChocolate
         }
 
         /// Wrap words to the next line where applicable
-        /// <param name="text"></param>
-        /// <returns></returns>
         private List<string> WordWrap(string text)
         {
             var pages = new List<string>();

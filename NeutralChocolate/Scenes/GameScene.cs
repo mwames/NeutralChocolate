@@ -6,6 +6,7 @@ using MonoGame.Extended.Tiled;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Input;
 
 namespace NeutralChocolate
 {
@@ -18,6 +19,9 @@ namespace NeutralChocolate
         private List<IEnemy> enemies = new List<IEnemy>();
         private List<IObstacle> obstacles = new List<IObstacle>();
         private List<IEnemy> bullets = new List<IEnemy>();
+         public DialogBox _dialogBox;
+        
+         
       
         public GameScene(GraphicsDevice graphicsDevice, TiledMap map)
         {
@@ -28,6 +32,17 @@ namespace NeutralChocolate
 
             cam = new OrthographicCamera(graphicsDevice);
             player = new Player(bullets);
+
+            _dialogBox = new DialogBox
+            {
+                Text = "Hello Gang! Press Y to proceed.\n" +
+                       "I will be on the next pane! " +
+                       "And wordwrap will occur, especially if there are some longer words!\n" +
+                       "After this dialog box finishes,  press O to open a new one."
+            };
+
+            // Initialize the dialog box (this also calls the Show() method)
+            _dialogBox.Initialize();
 
             player.Initialize();
             
@@ -62,6 +77,18 @@ namespace NeutralChocolate
             // Remove any necessary entities after collision resolution.
             enemies.RemoveAll(entity => entity.Health <= 0);
             bullets.RemoveAll(entity => entity.Health <= 0);
+
+             _dialogBox.Update();
+
+            // Debug key to show opening a new dialog box on demand
+            if (Input.kCurrent.IsKeyDown(Keys.O))
+            {
+                if (!_dialogBox.Active)
+                {
+                    _dialogBox = new DialogBox {Text = "New dialog box! maybe the words will wrap but if it doesn't maybe jam a bunch of text here to watch it loop"};
+                    _dialogBox.Initialize();
+                }
+            }
             
         }
 
@@ -94,6 +121,13 @@ namespace NeutralChocolate
             {
                 spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
             }
+            spriteBatch.End();
+
+             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+
+            // Draw the dialog box to the screen
+            _dialogBox.Draw(spriteBatch);
+
             spriteBatch.End();
         }
 
