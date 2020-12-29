@@ -69,10 +69,10 @@ namespace NeutralChocolate
 
         public DialogBox()
         {
-            BorderWidth = 2;
+            BorderWidth = 4;
             DialogColor = Color.Black;
 
-            FillColor = new Color(2.0f, 2.0f, 2.0f, 2.5f);
+            FillColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
             BorderColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 

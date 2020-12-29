@@ -19,7 +19,7 @@ namespace NeutralChocolate
         private List<IEnemy> enemies = new List<IEnemy>();
         private List<IObstacle> obstacles = new List<IObstacle>();
         private List<IEnemy> bullets = new List<IEnemy>();
-         public DialogBox _dialogBox;
+        public DialogBox _dialogBox;
         
          
       
@@ -32,17 +32,7 @@ namespace NeutralChocolate
 
             cam = new OrthographicCamera(graphicsDevice);
             player = new Player(bullets);
-
-            _dialogBox = new DialogBox
-            {
-                Text = "Hello Gang! Press Y to proceed.\n" +
-                       "I will be on the next pane! " +
-                       "And wordwrap will occur, especially if there are some longer words!\n" +
-                       "After this dialog box finishes,  press O to open a new one."
-            };
-
-            // Initialize the dialog box (this also calls the Show() method)
-            _dialogBox.Initialize();
+            _dialogBox = new DialogBox ();
 
             player.Initialize();
             
@@ -85,7 +75,7 @@ namespace NeutralChocolate
             {
                 if (!_dialogBox.Active)
                 {
-                    _dialogBox = new DialogBox {Text = "New dialog box! maybe the words will wrap but if it doesn't maybe jam a bunch of text here to watch it loop"};
+                    _dialogBox = new DialogBox {Text = "New dialog box! maybe the words will wrap but if it doesn't maybe jam a bunch of text here to watch it loop or maybe it will extend to the next screen."};
                     _dialogBox.Initialize();
                 }
             }
