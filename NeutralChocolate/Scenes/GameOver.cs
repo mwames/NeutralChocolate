@@ -34,7 +34,7 @@ namespace NeutralChocolate
             if (exit == true && (Input.WasPressed(Keys.Enter) || Input.WasPressed(Buttons.Start)))
             {
                 again = false;
-                // to do call the exit commmand
+                Program.Game.Exit();
             }
         }
 

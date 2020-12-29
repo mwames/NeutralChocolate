@@ -36,16 +36,15 @@ namespace NeutralChocolate
         public int BorderWidth { get; set; }
 
         /// Background fill texture (built from FillColor)
-        //private readonly Texture2D _fillTexture;
+        private readonly Texture2D _fillTexture;
 
         /// Border fill texture (built from BorderColor)
-       // public Texture2D _borderTexture;
-
+        private readonly Texture2D _borderTexture;
         /// Collection of pages contained in this dialog box
         private List<string> _pages;
 
         /// Margin surrounding the text inside the dialog box
-        private const float DialogBoxMargin = 24f;
+        private const float DialogBoxMargin = 14f;
 
         /// Size (in pixels) of a wide alphabet letter (W is the widest letter in almost every font) 
         private Vector2 _characterSize = Winder.spriteFont.MeasureString(new StringBuilder("W", 1));
@@ -97,15 +96,15 @@ namespace NeutralChocolate
             BorderWidth = 2;
             DialogColor = Color.Black;
 
-            FillColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+            FillColor = new Color(2.0f, 2.0f, 2.0f, 2.5f);
 
             BorderColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
             
 
-            //_fillTexture = new Texture2D(Winder.graphicsDevice, 1, 1);
-           //
-            //_borderTexture = new Texture2D(Winder.graphicsDevice, 1, 1);
-            //_borderTexture.SetData(new[] {BorderColor});
+            _fillTexture = new Texture2D(Program.Game.GraphicsDevice, 1, 1);
+            _fillTexture.SetData(new[] {FillColor});
+            _borderTexture = new Texture2D(Program.Game.GraphicsDevice, 1, 1);
+            _borderTexture.SetData(new[] {BorderColor});
 
             _pages = new List<string>();
             _currentPage = 0;
@@ -192,13 +191,13 @@ namespace NeutralChocolate
             if (Active)
             {
                 // // Draw each side of the border rectangle
-                // foreach (var side in BorderRectangles)
-                // {
-                //     spriteBatch.Draw(_borderTexture, (20, 20), side, Color.White);
-                // }
+                 foreach (var side in BorderRectangles)
+                 {
+                     spriteBatch.Draw(_borderTexture,  TextRectangle, side, Color.Black);
+                 }
 
                 // // Draw background fill texture (in this example, it's 50% transparent white)
-                // spriteBatch.Draw(_fillTexture, null, TextRectangle);
+                 spriteBatch.Draw(_fillTexture, TextRectangle, TextRectangle, Color.White);
 
                 // Draw the current page onto the dialog box
                 spriteBatch.DrawString(Winder.spriteFont, _pages[_currentPage], TextPosition, DialogColor);

@@ -15,7 +15,7 @@ namespace NeutralChocolate
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        public SpriteFont font;
+        private SpriteFont font;
         
         public NeutralChocolate()
         {

@@ -122,7 +122,8 @@ namespace NeutralChocolate
                 spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
             }
             spriteBatch.End();
-
+            
+            // NOTE: The NonPremultiplied blendstate is used to make the dialog box partially transparent
              spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
             // Draw the dialog box to the screen
