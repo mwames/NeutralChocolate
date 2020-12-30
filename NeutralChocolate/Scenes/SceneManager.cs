@@ -9,8 +9,9 @@ namespace NeutralChocolate
         Game,
         GameOver,
         Pause,
-        Editor,
+        Town,
         Options
+        
     }
 
     public class SceneManager

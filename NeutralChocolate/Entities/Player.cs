@@ -19,7 +19,7 @@ namespace NeutralChocolate
         private readonly int RADIUS = 56;
         private readonly int WIDTH = 58;
         private readonly int HEIGHT = 62;
-        private Vector2 position = new Vector2(100, 100);
+        public Vector2 position = new Vector2(100, 100);
         private int health = 5;
         private int speed = 300;
         private Dir direction = Dir.Down;
