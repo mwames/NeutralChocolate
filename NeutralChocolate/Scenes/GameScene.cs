@@ -20,8 +20,6 @@ namespace NeutralChocolate
         private List<IObstacle> obstacles = new List<IObstacle>();
         private List<IEnemy> bullets = new List<IEnemy>();
         public DialogBox _dialogBox;
-        
-         
       
         public GameScene(GraphicsDevice graphicsDevice, TiledMap map)
         {
@@ -52,13 +50,16 @@ namespace NeutralChocolate
         }
         public void Update(GameTime gameTime)
         {
+            if(!_dialogBox.Active)
+            {
             player.Update(gameTime, player.Position, map.WidthInPixels,map.HeightInPixels);
             UpdateCamera();
-            renderer.Update(gameTime);
-
+            
             // Run the update function for each entity.
             enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0,0));
             bullets.ForEach(entity => entity.Update(gameTime, player.Position,0,0));
+            }
+            renderer.Update(gameTime);
             
             // Check collisions
             ResolvePlayer(player, enemies);
@@ -75,6 +76,7 @@ namespace NeutralChocolate
             {
                 if (!_dialogBox.Active)
                 {
+               
                     _dialogBox = new DialogBox {Text = "New dialog box! maybe the words will wrap but if it doesn't maybe jam a bunch of text here to watch it loop or maybe it will extend to the next screen."};
                     _dialogBox.Initialize();
                 }
@@ -91,8 +93,20 @@ namespace NeutralChocolate
             if (player.Health > 0)
             {
             player.Draw(spriteBatch);
-            
 
+            // left side 
+            if (player.Position.X >=0 && player.Position.X <=60  && player.Position.Y >= 640 && player.Position.Y <=916)
+            {
+            //spriteBatch.DrawRectangle(0,640,60,256, Color.Blue);
+            spriteBatch.Draw(Art.Tree, new Vector2(200,500),Color.Brown);
+            }
+
+             // top
+            if (player.Position.X >=1025 && player.Position.X <=1217  && player.Position.Y >= 0 && player.Position.Y <=60)
+            {
+            spriteBatch.DrawRectangle(1025,0,192,60, Color.Blue);
+            }
+            
             enemies.ForEach(enemy => enemy.Draw(spriteBatch));
             bullets.ForEach(bullet => bullet.Draw(spriteBatch));
             obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
@@ -101,8 +115,6 @@ namespace NeutralChocolate
             {
                 Store.scenes.ChangeScene(SceneName.GameOver);
             }
-
-            spriteBatch.Draw(Art.Tree, new Vector2(200,200),Color.Brown);
             spriteBatch.End();
 
             // Screen space
@@ -174,7 +186,6 @@ namespace NeutralChocolate
 
             cam.LookAt(new Vector2(tempX, tempY));
         }
-
 
         private bool Bonked(IEntity entity1, IEntity entity2)
         {
