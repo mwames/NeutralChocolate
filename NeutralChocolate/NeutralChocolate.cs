@@ -47,7 +47,10 @@ namespace NeutralChocolate
             Sound.Load(Content);
            
             var overworldMap = Content.Load<TiledMap>("Misc/Test2");
-            var townMap = Content.Load<TiledMap>("Misc/Town1");
+            var townMap = Content.Load<TiledMap>("Misc/Town1"); // "Misc/Town" for new scaled map
+            var area1 = Content.Load<TiledMap>("Misc/Area1");
+            var backarea = Content.Load<TiledMap>("Misc/Backroad");
+
             Store.scenes.Add(SceneName.Game, new GameScene(GraphicsDevice, overworldMap));
             Store.scenes.Add(SceneName.Pause, new PauseScene());
             Store.scenes.Add(SceneName.TitleScene, new TitleScene());
