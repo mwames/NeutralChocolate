@@ -125,7 +125,14 @@ namespace NeutralChocolate
 
                 isMoving = false;
                 var tempPos = position;
-                var distanceToTravel = speed * dt;
+                 var distanceToTravel = speed * dt;
+                if(Input.IsPressed(Buttons.RightTrigger))
+                {
+                speed= 500;
+                }
+                else speed = 300;
+            
+                
 
                 if (Input.IsPressed(Buttons.LeftThumbstickUp) || Input.IsPressed(Keys.Up))
                     Move(Dir.Up, distanceToTravel);
@@ -158,7 +165,11 @@ namespace NeutralChocolate
                     Shoot(Dir.Down);
 
                 else if (Input.WasPressed(Buttons.X))
+                {
                     Shoot(Dir.Left);
+                    //Move(Dir.Left, distanceToTravel);
+                    
+                }
 
                 else if (Input.WasPressed(Buttons.B))
                     Shoot(Dir.Right);

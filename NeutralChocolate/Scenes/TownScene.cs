@@ -50,8 +50,9 @@ namespace NeutralChocolate
             {
             player.Update(gameTime, player.Position, map.WidthInPixels,map.HeightInPixels);
             UpdateCamera();
-           
             }
+            bullets.ForEach(entity => entity.Update(gameTime, player.Position,0,0));
+            bullets.RemoveAll(entity => entity.Health <= 0);
             renderer.Update(gameTime);
             
              _dialogBox.Update();
@@ -88,6 +89,7 @@ namespace NeutralChocolate
             }
 
             obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
+            bullets.ForEach(bullet => bullet.Draw(spriteBatch));
             }
             spriteBatch.End();
 
