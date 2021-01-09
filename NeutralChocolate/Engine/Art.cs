@@ -20,6 +20,10 @@ namespace NeutralChocolate
         public static Texture2D PlayButton { get; private set; }
         public static Texture2D OptionsButton { get; private set; }
         public static Texture2D Gold {get; private set;}
+        public static Texture2D CoolPlayerUp { get; private set; }
+        public static Texture2D CoolPlayerDown { get; private set; }
+        public static Texture2D CoolPlayerLeft { get; private set; }
+        public static Texture2D CoolPlayerRight { get; private set; }
 
         public static void Load(ContentManager Content)
         {
@@ -37,6 +41,10 @@ namespace NeutralChocolate
             OptionsButton = Content.Load<Texture2D>("Misc/OptionsButton");
             Pixel = Content.Load<Texture2D>("pixel");
             Gold = Content.Load<Texture2D>("Misc/GoldBlock");
+            CoolPlayerUp = Content.Load<Texture2D>("Player/CoolBack");
+            CoolPlayerDown = Content.Load<Texture2D>("Player/CoolFront");
+            CoolPlayerLeft = Content.Load<Texture2D>("Player/CoolLeft");
+            CoolPlayerRight = Content.Load<Texture2D>("Player/CoolRight");
 
         }
     }
