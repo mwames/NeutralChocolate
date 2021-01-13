@@ -17,7 +17,7 @@ namespace NeutralChocolate
         private OrthographicCamera cam;
         private Player player;
         private List<IEnemy> enemies = new List<IEnemy>();
-        private List<IObstacle> obstacles = new List<IObstacle>();
+        private List<IEntity> obstacles = new List<IEntity>();
         private List<IEnemy> bullets = new List<IEnemy>();
         public DialogBox _dialogBox;
 
@@ -45,7 +45,7 @@ namespace NeutralChocolate
                 .ToList();
 
             obstacles = allObstacles
-                .Select(obstacle => (IObstacle)EntityFactory(obstacle))
+                .Select(obstacle => EntityFactory(obstacle))
                 .Where(obstacle => obstacle != null)
                 .ToList();
         }
@@ -63,7 +63,7 @@ namespace NeutralChocolate
             renderer.Update(gameTime);
 
             // Check collisions
-            ResolvePlayer(player, enemies);
+            ResolvePlayer(player, obstacles.Concat(enemies).ToList());
             bullets.ForEach(bullet => ResolveBullet(bullet, enemies));
 
             // Remove any necessary entities after collision resolution.
@@ -211,13 +211,13 @@ namespace NeutralChocolate
             });
         }
 
-        private void ResolvePlayer(Player player, List<IEnemy> enemies)
+        private void ResolvePlayer(Player player, List<IEntity> entities)
         {
-            enemies.ForEach(enemy =>
+            entities.ForEach(entity =>
             {
-                if (Bonked(player, enemy))
+                if (Bonked(player, entity))
                 {
-                    player.OnCollide();
+                    player.OnCollide(entity.Damage);
                     return;
                 }
             });
@@ -225,10 +225,10 @@ namespace NeutralChocolate
 
         private bool DidCollide(IEntity otherEntity)
         {
-            foreach (IObstacle o in obstacles)
+            foreach (IEntity o in obstacles)
             {
                 int sum = o.Radius + otherEntity.Radius;
-                if (Vector2.Distance(o.HitPosition, otherEntity.Position) < sum)
+                if (Vector2.Distance(o.Position, otherEntity.Position) < sum)
                 {
                     return true;
                 }

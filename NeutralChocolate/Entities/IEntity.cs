@@ -6,6 +6,7 @@ namespace NeutralChocolate
     public interface IEntity
     {
         Vector2 Position { get; }
+        int Damage { get; }
         int Radius { get; }
         void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH);
         void Draw(SpriteBatch spriteBatch);
@@ -16,9 +17,5 @@ namespace NeutralChocolate
         int Health { get; set; }
         void OnHit();
 
-    }
-    public interface IObstacle : IEntity
-    {
-        Vector2 HitPosition { get; }
     }
 }

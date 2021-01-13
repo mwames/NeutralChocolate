@@ -6,8 +6,9 @@ namespace NeutralChocolate
     class Snake : IEnemy
     {
         private Vector2 position;
-        private int health;
-        private int speed;
+        private Collider collider;
+        private int health = 3;
+        private int speed = 160;
         private int radius;
         private float healthTimer = 0;
 
@@ -19,15 +20,15 @@ namespace NeutralChocolate
         private double stopTime = 0d;
         private bool move = true;
         public Vector2 Position => position;
-        public int Radius => radius;
+        public int Damage => 0;
+        public int Radius => 42;
 
 
         public Snake(Vector2 position)
         {
             this.position = position;
-            speed = 160;
-            radius = 42;
-            health = 3;
+            var bounds = new Rectangle((int)position.X, (int)position.Y, Radius, Radius);
+            this.collider = new Collider(bounds);
         }
 
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)
@@ -50,11 +51,16 @@ namespace NeutralChocolate
             }
 
             if (healthTimer > 0)
-
                 healthTimer -= dt;
+
+            collider.Update(gameTime, position, mapW, mapH);
         }
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (Store.modes.currentMode == Mode.Collider)
+            {
+                collider.Draw(spriteBatch);
+            }
             spriteBatch.Draw(Art.Snake, position, Color.White);
         }
 

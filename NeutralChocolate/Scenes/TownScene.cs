@@ -18,7 +18,7 @@ namespace NeutralChocolate
         private Player player;
         private List<IEnemy> bullets = new List<IEnemy>();
 
-        private List<IObstacle> obstacles = new List<IObstacle>();
+        private List<IEntity> obstacles = new List<IEntity>();
 
         public DialogBox _dialogBox;
 
@@ -39,7 +39,7 @@ namespace NeutralChocolate
             var allObstacles = new List<TiledMapObject>(map.GetLayer<TiledMapObjectLayer>("obstacles").Objects);
 
             obstacles = allObstacles
-                .Select(obstacle => (IObstacle)EntityFactory(obstacle))
+                .Select(obstacle => EntityFactory(obstacle))
                 .Where(obstacle => obstacle != null)
                 .ToList();
         }

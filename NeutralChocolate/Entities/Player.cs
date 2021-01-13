@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 
 namespace NeutralChocolate
 {
@@ -16,26 +15,27 @@ namespace NeutralChocolate
 
     class Player : IEntity
     {
+        // Constants
         private readonly int RADIUS = 56;
         private readonly int WIDTH = 58;
         private readonly int HEIGHT = 62;
-        public Vector2 position = new Vector2(100, 100);
+
+        // Private member variables
+        private AnimatedSprite[] animations;
+        private List<IEnemy> bullets;
+        private Collider collider;
+        private KeyboardState kStateOld = Keyboard.GetState();
+        private Dir direction = Dir.Down;
         private int health = 5;
         private int speed = 300;
-        private Dir direction = Dir.Down;
         private float healthTimer = 0f;
         private float shootRate = 0f;
         private bool isMoving = false;
-        private KeyboardState kStateOld = Keyboard.GetState();
-        private AnimatedSprite[] animations;
-        private AnimatedSprite Animation => animations[(int)direction];
-        private GamePadState gPrevious;
-        private GamePadState gCurrent;
-        private KeyboardState kPrevious;
-        private KeyboardState kCurrent;
-        private List<IEnemy> bullets;
-        private Collider collider;
 
+        // Properties
+        public Vector2 position = new Vector2(100, 100);
+        public int Damage => 0;
+        private AnimatedSprite Animation => animations[(int)direction];
         public int Radius => RADIUS;
         public Vector2 Position => position;
         public int Health => health;
@@ -110,22 +110,11 @@ namespace NeutralChocolate
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (shootRate > 0)
-
                 shootRate -= dt;
-
             if (healthTimer > 0)
-
                 healthTimer -= dt;
-
             if (health > 0)
             {
-
-                gPrevious = gCurrent;
-                gCurrent = GamePad.GetState(PlayerIndex.One);
-
-                kPrevious = kCurrent;
-                kCurrent = Keyboard.GetState();
-
                 isMoving = false;
                 var tempPos = position;
                 var distanceToTravel = speed * dt;
@@ -135,17 +124,12 @@ namespace NeutralChocolate
                 }
                 else speed = 300;
 
-
-
                 if (Input.IsPressed(Buttons.LeftThumbstickUp) || Input.IsPressed(Keys.Up))
                     Move(Dir.Up, distanceToTravel);
-
                 if (Input.IsPressed(Buttons.LeftThumbstickDown) || Input.IsPressed(Keys.Down))
                     Move(Dir.Down, distanceToTravel);
-
                 if (Input.IsPressed(Buttons.LeftThumbstickLeft) || Input.IsPressed(Keys.Left))
                     Move(Dir.Left, distanceToTravel);
-
                 if (Input.IsPressed(Buttons.LeftThumbstickRight) || Input.IsPressed(Keys.Right))
                     Move(Dir.Right, distanceToTravel);
 
@@ -158,22 +142,15 @@ namespace NeutralChocolate
                     Animation.setFrame(1);
                 }
 
+                // Shooting
                 if (Input.WasPressed(Keys.Space))
                     Shoot(direction);
-
                 else if (Input.WasPressed(Buttons.Y))
                     Shoot(Dir.Up);
-
                 else if (Input.WasPressed(Buttons.A))
                     Shoot(Dir.Down);
-
                 else if (Input.WasPressed(Buttons.X))
-                {
                     Shoot(Dir.Left);
-                    //Move(Dir.Left, distanceToTravel);
-
-                }
-
                 else if (Input.WasPressed(Buttons.B))
                     Shoot(Dir.Right);
             }
@@ -200,16 +177,13 @@ namespace NeutralChocolate
             collider.Update(gameTime, position, mapW, mapH);
         }
 
-        public void OnCollide()
+        public void OnCollide(int damage)
         {
             if (healthTimer <= 0)
             {
-                health--;
-
+                health -= damage;
                 healthTimer = 1.5f;
             }
-
-
         }
 
         public void Draw(SpriteBatch spriteBatch)

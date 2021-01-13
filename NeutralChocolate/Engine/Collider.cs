@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 // Basically use one of these buggers for collision detection
 namespace NeutralChocolate
 {
-    public class Collider : IEntity
+    public class Collider
     {
         private Rectangle bounds;
         public Collider(Rectangle bounds)

@@ -6,10 +6,12 @@ namespace NeutralChocolate
     class Eye : IEnemy
     {
         private Vector2 position;
-        private int health;
-        private int speed;
+        private Collider collider;
+        public int Damage => 1;
+        private int health = 5;
+        private int speed = 200;
         private float healthTimer = 0f;
-        private int radius;
+        private int radius = 45;
         public int Health
         {
             get { return health; }
@@ -23,12 +25,11 @@ namespace NeutralChocolate
         public Eye(Vector2 position)
         {
             this.position = position;
-            speed = 200;
-            radius = 45;
-            health = 5;
+            var bounds = new Rectangle((int)position.X, (int)position.Y, radius, radius);
+            this.collider = new Collider(bounds);
         }
 
-        public void Update(GameTime gameTime, Vector2 playerPos, int maapW, int maapH)
+        public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (move)
@@ -48,12 +49,17 @@ namespace NeutralChocolate
             }
 
             if (healthTimer > 0)
-
                 healthTimer -= dt;
+
+            collider.Update(gameTime, position, mapW, mapH);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (Store.modes.currentMode == Mode.Collider)
+            {
+                collider.Draw(spriteBatch);
+            }
             spriteBatch.Draw(Art.Eye, position, Color.White);
         }
 

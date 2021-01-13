@@ -11,15 +11,12 @@ namespace NeutralChocolate
     {
 
         private readonly int SPEED = 800;
+        private Collider collider;
         private int health = 1;
         private Vector2 position;
         private Dir direction;
-        public Projectile(Vector2 position, Dir direction)
-        {
-            this.position = position;
-            this.direction = direction;
-        }
         public Vector2 Position => position;
+        public int Damage => 0;
         public int Radius => 15;
 
         public int Health
@@ -28,6 +25,13 @@ namespace NeutralChocolate
             set => health = value;
         }
 
+        public Projectile(Vector2 position, Dir direction)
+        {
+            this.position = position;
+            this.direction = direction;
+            var bounds = new Rectangle((int)position.X, (int)position.Y, Radius, Radius);
+            this.collider = new Collider(bounds);
+        }
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -50,10 +54,16 @@ namespace NeutralChocolate
                 default:
                     break;
             }
+
+            collider.Update(gameTime, position, mapW, mapH);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (Store.modes.currentMode == Mode.Collider)
+            {
+                collider.Draw(spriteBatch);
+            }
             spriteBatch.Draw(Art.Bullet, position, Color.White);
         }
 
