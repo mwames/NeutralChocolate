@@ -192,7 +192,7 @@ namespace NeutralChocolate
 
         private bool Bonked(IEntity entity1, IEntity entity2)
         {
-            return Vector2.Distance(entity1.Position, entity2.Position) < entity1.Radius + entity2.Radius;
+            return entity1.Bounds.Intersects(entity2.Bounds); 
         }
 
         private void ResolveBullet(IEnemy bullet, List<IEnemy> enemies)
@@ -227,8 +227,7 @@ namespace NeutralChocolate
         {
             foreach (IEntity o in obstacles)
             {
-                int sum = o.Radius + otherEntity.Radius;
-                if (Vector2.Distance(o.Position, otherEntity.Position) < sum)
+                if (o.Bounds.Intersects(otherEntity.Bounds))
                 {
                     return true;
                 }

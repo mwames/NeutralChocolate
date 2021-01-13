@@ -5,11 +5,12 @@ namespace NeutralChocolate
 {
     public class Tree : IEntity
     {
+        private readonly int SIDE_LENGTH = 20;
         private readonly int WIDTH = 64;
         private readonly int HEIGHT = 150;
         private Vector2 position;
         private Collider collider;
-        public int Radius => 20;
+        public Rectangle Bounds => collider.bounds;
         public int Damage => 0;
         public Vector2 Position => position;
         public Vector2 HitPosition => new Vector2(position.X + WIDTH, position.Y + HEIGHT);
@@ -17,7 +18,7 @@ namespace NeutralChocolate
         public Tree(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Radius, Radius);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, SIDE_LENGTH, SIDE_LENGTH);
             this.collider = new Collider(bounds);
         }
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH) {

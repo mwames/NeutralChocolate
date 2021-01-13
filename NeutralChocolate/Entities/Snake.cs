@@ -5,11 +5,12 @@ namespace NeutralChocolate
 {
     class Snake : IEnemy
     {
+        private readonly int SIDE_LENGTH = 42;
         private Vector2 position;
         private Collider collider;
+        public Rectangle Bounds => collider.bounds;
         private int health = 3;
         private int speed = 160;
-        private int radius;
         private float healthTimer = 0;
 
         public int Health
@@ -21,13 +22,12 @@ namespace NeutralChocolate
         private bool move = true;
         public Vector2 Position => position;
         public int Damage => 0;
-        public int Radius => 42;
 
 
         public Snake(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Radius, Radius);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, SIDE_LENGTH, SIDE_LENGTH);
             this.collider = new Collider(bounds);
         }
 

@@ -16,7 +16,6 @@ namespace NeutralChocolate
     class Player : IEntity
     {
         // Constants
-        private readonly int RADIUS = 56;
         private readonly int WIDTH = 58;
         private readonly int HEIGHT = 62;
 
@@ -24,6 +23,7 @@ namespace NeutralChocolate
         private AnimatedSprite[] animations;
         private List<IEnemy> bullets;
         private Collider collider;
+        public Rectangle Bounds => collider.bounds;
         private KeyboardState kStateOld = Keyboard.GetState();
         private Dir direction = Dir.Down;
         private int health = 5;
@@ -36,7 +36,6 @@ namespace NeutralChocolate
         public Vector2 position = new Vector2(100, 100);
         public int Damage => 0;
         private AnimatedSprite Animation => animations[(int)direction];
-        public int Radius => RADIUS;
         public Vector2 Position => position;
         public int Health => health;
 
@@ -181,7 +180,7 @@ namespace NeutralChocolate
         {
             if (healthTimer <= 0)
             {
-                health -= damage;
+                // health -= damage;
                 healthTimer = 1.5f;
             }
         }

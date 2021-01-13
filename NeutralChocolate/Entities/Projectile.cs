@@ -9,15 +9,15 @@ namespace NeutralChocolate
 {
     class Projectile : IEnemy
     {
-
+        private readonly int SIDE_LENGTH = 15;
         private readonly int SPEED = 800;
         private Collider collider;
+        public Rectangle Bounds => collider.bounds;
         private int health = 1;
         private Vector2 position;
         private Dir direction;
         public Vector2 Position => position;
         public int Damage => 0;
-        public int Radius => 15;
 
         public int Health
         {
@@ -29,7 +29,7 @@ namespace NeutralChocolate
         {
             this.position = position;
             this.direction = direction;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Radius, Radius);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, SIDE_LENGTH, SIDE_LENGTH);
             this.collider = new Collider(bounds);
         }
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH)

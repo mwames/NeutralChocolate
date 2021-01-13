@@ -6,14 +6,13 @@ namespace NeutralChocolate
 {
     public class Collider
     {
-        private Rectangle bounds;
+        public Rectangle bounds;
         public Collider(Rectangle bounds)
         {
             this.bounds = bounds;
         }
 
         public Vector2 Position => new Vector2(bounds.Left, bounds.Top);
-        public int Radius => bounds.Width;
         public Texture2D Texture => Art.Pixel;
 
         // Draws the outline of the collider

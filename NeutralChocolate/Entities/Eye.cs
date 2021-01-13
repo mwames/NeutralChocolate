@@ -5,13 +5,14 @@ namespace NeutralChocolate
 {
     class Eye : IEnemy
     {
+        private readonly int SIDE_LENGTH = 57;
         private Vector2 position;
         private Collider collider;
+        public Rectangle Bounds => collider.bounds;
         public int Damage => 1;
         private int health = 5;
         private int speed = 200;
         private float healthTimer = 0f;
-        private int radius = 45;
         public int Health
         {
             get { return health; }
@@ -20,12 +21,11 @@ namespace NeutralChocolate
         private double stopTime = 0d;
         private bool move = true;
         public Vector2 Position => position;
-        public int Radius => radius;
 
         public Eye(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, radius, radius);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, SIDE_LENGTH, SIDE_LENGTH);
             this.collider = new Collider(bounds);
         }
 
