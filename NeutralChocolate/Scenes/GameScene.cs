@@ -224,11 +224,11 @@ namespace NeutralChocolate
 
             // Set the Y component
             if (player.Bounds.Center.Y > entity.Bounds.Center.Y) {
-                //deflection.Y = entity.Bounds.Bottom - player.Bounds.Top;
+                deflection.Y = entity.Bounds.Bottom - player.Bounds.Top;
             }
             else
             {
-                //deflection.Y = entity.Bounds.Top - player.Bounds.Bottom;
+                deflection.Y = entity.Bounds.Top - player.Bounds.Bottom;
             }
 
             return deflection;

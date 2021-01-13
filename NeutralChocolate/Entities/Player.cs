@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -183,8 +184,11 @@ namespace NeutralChocolate
                 // health -= damage;
                 healthTimer = 1.5f;
             }
-                System.Console.WriteLine(magnitude);
-                position += magnitude;
+
+            if (Math.Abs(magnitude.X) < Math.Abs(magnitude.Y))
+                position.X += magnitude.X;
+            else if (Math.Abs(magnitude.X) > Math.Abs(magnitude.Y))
+                position.Y += magnitude.Y;
         }
 
         public void Draw(SpriteBatch spriteBatch)
