@@ -57,7 +57,7 @@ namespace NeutralChocolate
                 UpdateCamera();
 
                 // Run the update function for each entity.
-                enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
+                // enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
                 bullets.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
             }
             renderer.Update(gameTime);
@@ -98,10 +98,7 @@ namespace NeutralChocolate
                 // left side 
                 if (player.Position.X >= 0 && player.Position.X <= 60 && player.Position.Y >= 640 && player.Position.Y <= 916)
                 {
-                    //spriteBatch.DrawRectangle(0,640,60,256, Color.Blue);
-
                     Store.scenes.ChangeScene(SceneName.Town);
-                    //spriteBatch.Draw(Art.Tree, new Vector2(200,500),Color.Brown);
                 }
 
                 // top
@@ -192,7 +189,7 @@ namespace NeutralChocolate
 
         private bool Bonked(IEntity entity1, IEntity entity2)
         {
-            return entity1.Bounds.Intersects(entity2.Bounds); 
+            return entity1.Bounds.Intersects(entity2.Bounds);
         }
 
         private void ResolveBullet(IEnemy bullet, List<IEnemy> enemies)
@@ -211,13 +208,39 @@ namespace NeutralChocolate
             });
         }
 
+        private Vector2 GetDeflection(Player player, IEntity entity)
+        {
+            var deflection = new Vector2();
+
+            // Set the X component
+            if (player.Bounds.Center.X > entity.Bounds.Center.X)
+            {
+                deflection.X = entity.Bounds.Right - player.Bounds.Left;
+            }
+            else
+            {
+                deflection.X = entity.Bounds.Left - player.Bounds.Right;
+            }
+
+            // Set the Y component
+            if (player.Bounds.Center.Y > entity.Bounds.Center.Y) {
+                //deflection.Y = entity.Bounds.Bottom - player.Bounds.Top;
+            }
+            else
+            {
+                //deflection.Y = entity.Bounds.Top - player.Bounds.Bottom;
+            }
+
+            return deflection;
+        }
+
         private void ResolvePlayer(Player player, List<IEntity> entities)
         {
             entities.ForEach(entity =>
             {
                 if (Bonked(player, entity))
                 {
-                    player.OnCollide(entity.Damage);
+                    player.OnCollide(entity.Damage, GetDeflection(player, entity));
                     return;
                 }
             });

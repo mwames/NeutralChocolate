@@ -176,13 +176,15 @@ namespace NeutralChocolate
             collider.Update(gameTime, position, mapW, mapH);
         }
 
-        public void OnCollide(int damage)
+        public void OnCollide(int damage, Vector2 magnitude)
         {
             if (healthTimer <= 0)
             {
                 // health -= damage;
                 healthTimer = 1.5f;
             }
+                System.Console.WriteLine(magnitude);
+                position += magnitude;
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -5,7 +5,6 @@ namespace NeutralChocolate
 {
     class Snake : IEnemy
     {
-        private readonly int SIDE_LENGTH = 42;
         private Vector2 position;
         private Collider collider;
         public Rectangle Bounds => collider.bounds;
@@ -27,7 +26,7 @@ namespace NeutralChocolate
         public Snake(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, SIDE_LENGTH, SIDE_LENGTH);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Snake.Width, Art.Snake.Height);
             this.collider = new Collider(bounds);
         }
 

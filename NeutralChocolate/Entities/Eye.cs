@@ -5,7 +5,6 @@ namespace NeutralChocolate
 {
     class Eye : IEnemy
     {
-        private readonly int SIDE_LENGTH = 57;
         private Vector2 position;
         private Collider collider;
         public Rectangle Bounds => collider.bounds;
@@ -25,7 +24,7 @@ namespace NeutralChocolate
         public Eye(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, SIDE_LENGTH, SIDE_LENGTH);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Eye.Width, Art.Eye.Height);
             this.collider = new Collider(bounds);
         }
 
