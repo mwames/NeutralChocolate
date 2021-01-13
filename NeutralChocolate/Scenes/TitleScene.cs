@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 namespace NeutralChocolate
 {
     public class TitleScene : IScene
-   {
+    {
         readonly string MESSAGE = "The Outdoor adventures of Bathroom Jim";
         readonly string COMPANY = "A KanAme Production";
         readonly int MARGIN_TOP = 75;
@@ -17,23 +17,14 @@ namespace NeutralChocolate
 
         public void Update(GameTime gameTime)
         {
-           mFadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
+            mFadeDelay -= gameTime.ElapsedGameTime.TotalSeconds;
             if (mFadeDelay <= 0)
             {
                 //Reset the Fade delay
                 mFadeDelay = .035;
- 
+
                 //Increment/Decrement the fade value for the image
                 mAlphaValue += mFadeIncrement;
- 
-                //If the AlphaValue is equal or above the max Alpha value or
-                //has dropped below or equal to the min Alpha value, then 
-                
-                //reverse the fade
-                // if (mAlphaValue >= 255 || mAlphaValue <= 0)
-                // {
-                //     mFadeIncrement *= -1;
-                // }
             }
 
             if (Input.WasPressed(Keys.Right) || Input.WasPressed(Buttons.LeftThumbstickRight))
@@ -68,7 +59,7 @@ namespace NeutralChocolate
             spriteBatch.Draw(
               Art.PlayerDown,
               new Rectangle(0, MARGIN_TOP, Winder.Width, Winder.Height / 2),
-                new Color(255,255,255,MathHelper.Clamp(mAlphaValue, 0,255))
+                new Color(255, 255, 255, MathHelper.Clamp(mAlphaValue, 0, 255))
              );
 
             var startColor = start ? Color.Yellow : Color.White;
@@ -97,17 +88,17 @@ namespace NeutralChocolate
                 Color.Black
                 );
 
-                spriteBatch.DrawString(
-                spriteFont,
-                COMPANY,
-                new Vector2(
-                    Winder.Width / 2 -150,
-                    Winder.Height  - 30
-                ),
-                Color.Black
-                );
+            spriteBatch.DrawString(
+            spriteFont,
+            COMPANY,
+            new Vector2(
+                Winder.Width / 2 - 150,
+                Winder.Height - 30
+            ),
+            Color.Black
+            );
 
-                spriteBatch.End();
+            spriteBatch.End();
         }
     }
 }

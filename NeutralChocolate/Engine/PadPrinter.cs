@@ -2,18 +2,23 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace NeutralChocolate {
-    public static class PadPrinter {
+namespace NeutralChocolate
+{
+    public static class PadPrinter
+    {
         private static readonly int MARGIN = 10;
         private static readonly int HEIGHT = 35;
         private static readonly int RIGHT_OFFSET = 20;
-        private static string ButtonName(Buttons button) {
+        private static string ButtonName(Buttons button)
+        {
             return button.ToString().Replace("LeftThumbstick", "");
         }
-        private static bool IsDown(Buttons button) {
+        private static bool IsDown(Buttons button)
+        {
             return GamePad.GetState(PlayerIndex.One).IsButtonDown(button);
         }
-        public static void Print(SpriteBatch batch, SpriteFont font) {
+        public static void Print(SpriteBatch batch, SpriteFont font)
+        {
             // Top row
             var up = Buttons.LeftThumbstickUp;
             batch.DrawString(font, ButtonName(up), new Vector2(MARGIN * 6, 1 * HEIGHT + MARGIN), IsDown(up) ? Color.Green : Color.Red);
@@ -42,7 +47,8 @@ namespace NeutralChocolate {
             batch.DrawString(font, ButtonName(a), new Vector2(MARGIN * 25, 3 * HEIGHT + MARGIN), IsDown(a) ? Color.Green : Color.Red);
         }
 
-        public static void PrintRight(SpriteBatch batch, SpriteFont font) {
+        public static void PrintRight(SpriteBatch batch, SpriteFont font)
+        {
             // Top row
             var up = Buttons.LeftThumbstickUp;
             batch.DrawString(font, ButtonName(up), new Vector2(Winder.Width - RIGHT_OFFSET - MARGIN * 24, 1 * HEIGHT + MARGIN), IsDown(up) ? Color.Green : Color.Red);

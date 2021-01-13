@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace NeutralChocolate
 {
-     enum Dir
+    enum Dir
     {
         Down,
         Up,
@@ -40,7 +40,8 @@ namespace NeutralChocolate
         public Vector2 Position => position;
         public int Health => health;
 
-        public Player(List<IEnemy> bullets) {
+        public Player(List<IEnemy> bullets)
+        {
             this.bullets = bullets;
             this.collider = new Collider(
                 new Rectangle(
@@ -52,7 +53,8 @@ namespace NeutralChocolate
             );
         }
 
-        public void Initialize() {
+        public void Initialize()
+        {
             animations = new[] {
                 new AnimatedSprite(Art.PlayerDown, 1, 4),
                 new AnimatedSprite(Art.PlayerUp, 1, 4),
@@ -61,7 +63,8 @@ namespace NeutralChocolate
             };
         }
 
-        private AnimatedSprite GetAnimationFrame(Texture2D texture) {
+        private AnimatedSprite GetAnimationFrame(Texture2D texture)
+        {
             return new AnimatedSprite(texture, 1, 4);
         }
 
@@ -90,11 +93,11 @@ namespace NeutralChocolate
 
         private void Shoot(Dir direction)
         {
-            if(shootRate<= 0)
+            if (shootRate <= 0)
             {
-            bullets.Add(new Projectile(position, direction));
-            Sound.Blip.Play();
-            shootRate = .2f;
+                bullets.Add(new Projectile(position, direction));
+                Sound.Blip.Play();
+                shootRate = .2f;
             }
         }
 
@@ -107,15 +110,15 @@ namespace NeutralChocolate
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (shootRate > 0)
-            
+
                 shootRate -= dt;
-         
+
             if (healthTimer > 0)
-            
+
                 healthTimer -= dt;
 
             if (health > 0)
-            {   
+            {
 
                 gPrevious = gCurrent;
                 gCurrent = GamePad.GetState(PlayerIndex.One);
@@ -125,14 +128,14 @@ namespace NeutralChocolate
 
                 isMoving = false;
                 var tempPos = position;
-                 var distanceToTravel = speed * dt;
-                if(Input.IsPressed(Buttons.RightTrigger))
+                var distanceToTravel = speed * dt;
+                if (Input.IsPressed(Buttons.RightTrigger))
                 {
-                speed= 500;
+                    speed = 500;
                 }
                 else speed = 300;
-            
-                
+
+
 
                 if (Input.IsPressed(Buttons.LeftThumbstickUp) || Input.IsPressed(Keys.Up))
                     Move(Dir.Up, distanceToTravel);
@@ -168,28 +171,28 @@ namespace NeutralChocolate
                 {
                     Shoot(Dir.Left);
                     //Move(Dir.Left, distanceToTravel);
-                    
+
                 }
 
                 else if (Input.WasPressed(Buttons.B))
                     Shoot(Dir.Right);
             }
 
-            if(position.X < 0)
+            if (position.X < 0)
             {
                 position.X = 0;
             }
 
-            if(position.Y < 0)
+            if (position.Y < 0)
             {
                 position.Y = 0;
             }
 
-            if(position.X + HEIGHT > mapW)
+            if (position.X + HEIGHT > mapW)
             {
                 position.X = mapW - WIDTH;
             }
-            if(position.Y + HEIGHT > mapH)
+            if (position.Y + HEIGHT > mapH)
             {
                 position.Y = mapH - HEIGHT;
             }
@@ -197,19 +200,22 @@ namespace NeutralChocolate
             collider.Update(gameTime, position, mapW, mapH);
         }
 
-        public void OnCollide() {
-            if (healthTimer <= 0) {
+        public void OnCollide()
+        {
+            if (healthTimer <= 0)
+            {
                 health--;
-               
+
                 healthTimer = 1.5f;
             }
-           
-            
+
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (Store.modes.currentMode == Mode.Collider) {
+            if (Store.modes.currentMode == Mode.Collider)
+            {
                 collider.Draw(spriteBatch);
             }
             Animation.Draw(spriteBatch, new Vector2(Position.X - 20, Position.Y - 17));

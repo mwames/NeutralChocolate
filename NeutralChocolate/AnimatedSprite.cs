@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System.Security.Cryptography.X509Certificates;
 
 namespace NeutralChocolate
 {
     public class AnimatedSprite
     {
-        
+
         public Texture2D Texture { get; set; }
         public int Rows { get; set; }
         public int Columns { get; set; }
@@ -36,9 +35,9 @@ namespace NeutralChocolate
             if (timer <= 0)
             {
                 currentFrame++;
-                
+
                 timer = speed;
-        }
+            }
             if (currentFrame == totalFrames)
                 currentFrame = 0;
         }

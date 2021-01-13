@@ -15,13 +15,13 @@ namespace NeutralChocolate
         private TiledMapRenderer renderer;
         private TiledMap map;
         private OrthographicCamera cam;
-        private Player player; 
+        private Player player;
         private List<IEnemy> bullets = new List<IEnemy>();
 
         private List<IObstacle> obstacles = new List<IObstacle>();
 
         public DialogBox _dialogBox;
-      
+
         public TownScene(GraphicsDevice graphicsDevice, TiledMap map)
         {
             MediaPlayer.Play(Sound.Overworld);
@@ -31,12 +31,11 @@ namespace NeutralChocolate
 
             cam = new OrthographicCamera(graphicsDevice);
             player = new Player(bullets);
-            _dialogBox = new DialogBox ();
-            
+            _dialogBox = new DialogBox();
+
             player.Initialize();
-            
+
             //if object ref not found, make sure you are pulling the latest tiled map version. 
-           
             var allObstacles = new List<TiledMapObject>(map.GetLayer<TiledMapObjectLayer>("obstacles").Objects);
 
             obstacles = allObstacles
@@ -46,50 +45,50 @@ namespace NeutralChocolate
         }
         public void Update(GameTime gameTime)
         {
-            if(!_dialogBox.Active)
+            if (!_dialogBox.Active)
             {
-            player.Update(gameTime, player.Position, map.WidthInPixels,map.HeightInPixels);
-            UpdateCamera();
+                player.Update(gameTime, player.Position, map.WidthInPixels, map.HeightInPixels);
+                UpdateCamera();
             }
-            bullets.ForEach(entity => entity.Update(gameTime, player.Position,0,0));
+            bullets.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
             bullets.RemoveAll(entity => entity.Health <= 0);
             renderer.Update(gameTime);
-            
-             _dialogBox.Update();
+
+            _dialogBox.Update();
 
             // Debug key to show opening a new dialog box on demand
             if (Input.kCurrent.IsKeyDown(Keys.O))
             {
                 if (!_dialogBox.Active)
                 {
-               
-                    _dialogBox = new DialogBox {Text = "New dialog box! maybe the words will wrap but if it doesn't maybe jam a bunch of text here to watch it loop or maybe it will extend to the next screen."};
+
+                    _dialogBox = new DialogBox { Text = "New dialog box! maybe the words will wrap but if it doesn't maybe jam a bunch of text here to watch it loop or maybe it will extend to the next screen." };
                     _dialogBox.Initialize();
                 }
             }
-            
+
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
         {
-            
+
             // World space
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());
             if (player.Health > 0)
             {
-            player.Draw(spriteBatch);
+                player.Draw(spriteBatch);
 
-            // Right side 
-            if (player.Position.X <=map.WidthInPixels && player.Position.X >=map.WidthInPixels-60  && player.Position.Y >= 640 && player.Position.Y <=916)
-            {
-            //spriteBatch.DrawRectangle(0,640,60,256, Color.Blue);
-            Store.scenes.ChangeScene(SceneName.Game);
-            //spriteBatch.Draw(Art.Tree, new Vector2(200,500),Color.Brown);
-            }
+                // Right side 
+                if (player.Position.X <= map.WidthInPixels && player.Position.X >= map.WidthInPixels - 60 && player.Position.Y >= 640 && player.Position.Y <= 916)
+                {
+                    //spriteBatch.DrawRectangle(0,640,60,256, Color.Blue);
+                    Store.scenes.ChangeScene(SceneName.Game);
+                    //spriteBatch.Draw(Art.Tree, new Vector2(200,500),Color.Brown);
+                }
 
-            obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
-            bullets.ForEach(bullet => bullet.Draw(spriteBatch));
+                obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
+                bullets.ForEach(bullet => bullet.Draw(spriteBatch));
             }
             spriteBatch.End();
 
@@ -101,9 +100,9 @@ namespace NeutralChocolate
                 spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
             }
             spriteBatch.End();
-            
+
             // NOTE: The NonPremultiplied blendstate is used to make the dialog box partially transparent
-             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
             // Draw the dialog box to the screen
             _dialogBox.Draw(spriteBatch);
@@ -162,24 +161,6 @@ namespace NeutralChocolate
             }
 
             cam.LookAt(new Vector2(tempX, tempY));
-        }
-
-        private bool Bonked(IEntity entity1, IEntity entity2)
-        {
-            return Vector2.Distance(entity1.Position, entity2.Position) < entity1.Radius + entity2.Radius;
-        }
-
-        private bool DidCollide(IEntity otherEntity)
-        {
-            foreach (IObstacle o in obstacles)
-            {
-                int sum = o.Radius + otherEntity.Radius;
-                if (Vector2.Distance(o.HitPosition, otherEntity.Position) < sum)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

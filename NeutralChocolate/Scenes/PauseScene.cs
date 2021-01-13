@@ -8,7 +8,7 @@ namespace NeutralChocolate
     {
         public void Update(GameTime gameTime)
         {
-        if (Input.WasPressed(Keys.Enter))
+            if (Input.WasPressed(Keys.Enter))
             {
                 Store.scenes.ChangeScene(SceneName.Game);
             }
@@ -27,7 +27,7 @@ namespace NeutralChocolate
                 ),
                 Color.Black
                 );
-                spriteBatch.End();
+            spriteBatch.End();
         }
     }
 }

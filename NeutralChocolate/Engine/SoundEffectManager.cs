@@ -8,7 +8,7 @@ namespace NeutralChocolate
         None,
         Blip,
     }
-        
+
 
     public class SoundEffectManager
     {

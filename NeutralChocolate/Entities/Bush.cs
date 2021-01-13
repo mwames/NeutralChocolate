@@ -11,7 +11,8 @@ namespace NeutralChocolate
         public Vector2 HitPosition => new Vector2(position.X + SIDE_LENGTH, position.Y + SIDE_LENGTH);
         public int Radius => 32;
 
-        public Bush(Vector2 position) {
+        public Bush(Vector2 position)
+        {
             this.position = position;
         }
         public void Update(GameTime gameTime, Vector2 playerPos, int maapW, int maapH) { }

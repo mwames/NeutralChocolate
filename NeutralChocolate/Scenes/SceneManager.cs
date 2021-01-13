@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace NeutralChocolate
@@ -11,7 +10,7 @@ namespace NeutralChocolate
         Pause,
         Town,
         Options
-        
+
     }
 
     public class SceneManager

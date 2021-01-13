@@ -7,14 +7,14 @@ namespace NeutralChocolate
 {
     public static class Sound
     {
-        public static Song Overworld{ get; private set; }
-        public static SoundEffect Blip { get; private set;}
+        public static Song Overworld { get; private set; }
+        public static SoundEffect Blip { get; private set; }
 
-         public static void Load(ContentManager content)
+        public static void Load(ContentManager content)
         {
-        Overworld = content.Load<Song>("Sounds/nature");
-        Blip = content.Load<SoundEffect>("Sounds/Blip");
-        MediaPlayer.IsRepeating = true;
+            Overworld = content.Load<Song>("Sounds/nature");
+            Blip = content.Load<SoundEffect>("Sounds/Blip");
+            MediaPlayer.IsRepeating = true;
         }
     }
 }

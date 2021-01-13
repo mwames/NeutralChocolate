@@ -1,13 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
-using MonoGame.Extended.Tiled.Renderers;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended.Tiled;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace NeutralChocolate
 {
@@ -16,7 +10,7 @@ namespace NeutralChocolate
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-        
+
         public NeutralChocolate()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -26,10 +20,7 @@ namespace NeutralChocolate
 
         protected override void Initialize()
         {
-            Store.scenes= new SceneManager();
-            //Store.textures = new TextureManager();
-            //Store.soundEffects = new SoundEffectManager();
-            //Store.songs = new SongManager();
+            Store.scenes = new SceneManager();
             Store.modes = new ModeManager();
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
@@ -43,11 +34,11 @@ namespace NeutralChocolate
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Art.Load(Content);  
+            Art.Load(Content);
             Sound.Load(Content);
-           
+
             var overworldMap = Content.Load<TiledMap>("Misc/Test2");
-            var townMap = Content.Load<TiledMap>("Misc/Town1"); // "Misc/Town" for new scaled map
+            var townMap = Content.Load<TiledMap>("Misc/Town1");
             var area1 = Content.Load<TiledMap>("Misc/Area1");
             var backarea = Content.Load<TiledMap>("Misc/Backroad");
 
@@ -58,7 +49,7 @@ namespace NeutralChocolate
             Store.scenes.Add(SceneName.Town, new TownScene(GraphicsDevice, townMap));
             Store.scenes.ChangeScene(SceneName.TitleScene);
 
-             
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -72,7 +63,7 @@ namespace NeutralChocolate
             Store.scenes.Scene.Update(gameTime);
             base.Update(gameTime);
 
-            
+
         }
 
         protected override void Draw(GameTime gameTime)

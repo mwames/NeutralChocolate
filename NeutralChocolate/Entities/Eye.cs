@@ -30,25 +30,25 @@ namespace NeutralChocolate
 
         public void Update(GameTime gameTime, Vector2 playerPos, int maapW, int maapH)
         {
-        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if(move)
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (move)
             {
                 Vector2 moveDir = playerPos - position;
                 moveDir.Normalize();
                 position += moveDir * speed * dt;
             }
 
-            if(stopTime <=0)
+            if (stopTime <= 0)
             {
                 stopTime = stopTime + dt;
             }
-            else 
+            else
             {
-                 move =true;
+                move = true;
             }
 
             if (healthTimer > 0)
-            
+
                 healthTimer -= dt;
         }
 
@@ -59,13 +59,13 @@ namespace NeutralChocolate
 
         public void OnHit()
         {
-            if (healthTimer <=0)
+            if (healthTimer <= 0)
             {
-            health -= 1;
-            move = false;
-            stopTime = -0.5d;
-            healthTimer = .5f;
-            speed = speed + 50;
+                health -= 1;
+                move = false;
+                stopTime = -0.5d;
+                healthTimer = .5f;
+                speed = speed + 50;
             }
         }
     }

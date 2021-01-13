@@ -1,8 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace NeutralChocolate {
-    public static class Input {
+namespace NeutralChocolate
+{
+    public static class Input
+    {
         public static KeyboardState kCurrent;
         public static KeyboardState kPrevious;
         public static GamePadState gCurrent;
@@ -14,7 +16,8 @@ namespace NeutralChocolate {
         public static bool RightClicked => mCurrent.RightButton == ButtonState.Pressed && mPrevious.RightButton != ButtonState.Pressed;
         public static Vector2 ClickedAt => new Vector2(mCurrent.X, mCurrent.Y);
 
-        public static void Update() {
+        public static void Update()
+        {
             kPrevious = kCurrent;
             kCurrent = Keyboard.GetState();
             gPrevious = gCurrent;
@@ -38,7 +41,8 @@ namespace NeutralChocolate {
             return kCurrent.IsKeyDown(key);
         }
 
-        public static bool IsPressed(Buttons button) {
+        public static bool IsPressed(Buttons button)
+        {
             return gCurrent.IsButtonDown(button);
         }
     }

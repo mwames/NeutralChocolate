@@ -35,7 +35,8 @@ namespace NeutralChocolate
             }
         }
 
-        public bool Active(DebugOptions option) {
+        public bool Active(DebugOptions option)
+        {
             return currentMode == Mode.Debug && enabledOptions.Contains(option);
         }
 

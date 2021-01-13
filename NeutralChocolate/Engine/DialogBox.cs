@@ -25,8 +25,8 @@ namespace NeutralChocolate
         private List<string> _pages;
         private const float DialogBoxMargin = 14f;
         private Vector2 _characterSize = Winder.spriteFont.MeasureString(new StringBuilder("s", 1));
-        private int MaxCharsPerLine => (int) Math.Floor((Size.X - DialogBoxMargin)/_characterSize.X);
-        private int MaxLines => (int) Math.Floor((Size.Y - DialogBoxMargin)/_characterSize.Y) - 1;
+        private int MaxCharsPerLine => (int)Math.Floor((Size.X - DialogBoxMargin) / _characterSize.X);
+        private int MaxLines => (int)Math.Floor((Size.Y - DialogBoxMargin) / _characterSize.Y) - 1;
         private int _currentPage;
         private int _interval;
         private Rectangle TextRectangle => new Rectangle(Position.ToPoint(), Size.ToPoint());
@@ -64,7 +64,7 @@ namespace NeutralChocolate
             )
         };
 
-        private Vector2 TextPosition => new Vector2(Position.X + DialogBoxMargin/2, Position.Y + DialogBoxMargin/2);
+        private Vector2 TextPosition => new Vector2(Position.X + DialogBoxMargin / 2, Position.Y + DialogBoxMargin / 2);
         private Stopwatch _stopwatch;
 
         public DialogBox()
@@ -77,7 +77,7 @@ namespace NeutralChocolate
             BorderColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 
             _fillTexture = new Texture2D(Program.Game.GraphicsDevice, 1, 1);
-            _fillTexture.SetData(new[] {FillColor});
+            _fillTexture.SetData(new[] { FillColor });
 
             _borderTexture = new Texture2D(Program.Game.GraphicsDevice, 1, 1);
             _borderTexture.SetData(new[] { BorderColor });
@@ -85,12 +85,12 @@ namespace NeutralChocolate
             _pages = new List<string>();
             _currentPage = 0;
 
-            var sizeX = (int) (Winder.Width * 0.5);
-            var sizeY = (int) (Winder.Height * 0.2);
+            var sizeX = (int)(Winder.Width * 0.5);
+            var sizeY = (int)(Winder.Height * 0.2);
 
             Size = new Vector2(sizeX, sizeY);
 
-            var posX = Winder.Width/2 - (Size.X/2f);
+            var posX = Winder.Width / 2 - (Size.X / 2f);
             var posY = Winder.Height - Size.Y - 30;
 
             Position = new Vector2(posX, posY);
@@ -183,7 +183,7 @@ namespace NeutralChocolate
         /// Whether the indicator should be visible or not
         private bool BlinkIndicator()
         {
-            _interval = (int) Math.Floor((double) (_stopwatch.ElapsedMilliseconds%1000));
+            _interval = (int)Math.Floor((double)(_stopwatch.ElapsedMilliseconds % 1000));
 
             return _interval < 500;
         }
@@ -195,7 +195,7 @@ namespace NeutralChocolate
 
             var capacity = MaxCharsPerLine * MaxLines > text.Length
                 ? text.Length
-                : MaxCharsPerLine*MaxLines;
+                : MaxCharsPerLine * MaxLines;
 
             var result = new StringBuilder(capacity);
             var resultLines = 0;
