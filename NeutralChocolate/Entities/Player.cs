@@ -17,7 +17,7 @@ namespace NeutralChocolate
     class Player : IEntity
     {
         // Constants
-        private readonly int WIDTH = 58;
+        private readonly int WIDTH = 54;
         private readonly int HEIGHT = 62;
 
         // Private member variables

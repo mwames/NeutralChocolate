@@ -26,7 +26,7 @@ namespace NeutralChocolate
         public Snake(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Snake.Width, Art.Snake.Height);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Snake.Width-10, Art.Snake.Height-20);
             this.collider = new Collider(bounds);
         }
 

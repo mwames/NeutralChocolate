@@ -57,7 +57,7 @@ namespace NeutralChocolate
                 UpdateCamera();
 
                 // Run the update function for each entity.
-                // enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
+                enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
                 bullets.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
             }
             renderer.Update(gameTime);
@@ -82,6 +82,9 @@ namespace NeutralChocolate
                     _dialogBox.Initialize();
                 }
             }
+            if (Input.WasPressed(Buttons.Start))
+                 Store.scenes.ChangeScene(SceneName.Pause);
+
 
         }
 
@@ -91,6 +94,7 @@ namespace NeutralChocolate
             // World space
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());
+           
             if (player.Health > 0)
             {
                 player.Draw(spriteBatch);

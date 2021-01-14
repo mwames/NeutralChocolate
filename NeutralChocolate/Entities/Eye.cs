@@ -24,7 +24,7 @@ namespace NeutralChocolate
         public Eye(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Eye.Width, Art.Eye.Height);
+            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Eye.Width-30, Art.Eye.Height-5);
             this.collider = new Collider(bounds);
         }
 

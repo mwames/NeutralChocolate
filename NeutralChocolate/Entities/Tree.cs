@@ -17,7 +17,7 @@ namespace NeutralChocolate
         public Tree(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Tree.Width, Art.Tree.Height);
+            var bounds = new Rectangle((int)position.X +20, (int)position.Y+140, Art.Tree.Width-40, Art.Tree.Height/4);
             this.collider = new Collider(bounds);
         }
         public void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH) {

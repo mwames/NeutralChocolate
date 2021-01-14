@@ -8,7 +8,7 @@ namespace NeutralChocolate
     {
         public void Update(GameTime gameTime)
         {
-            if (Input.WasPressed(Keys.Enter))
+            if (Input.WasPressed(Keys.Enter)|| Input.WasPressed(Buttons.Start))
             {
                 Store.scenes.ChangeScene(SceneName.Game);
             }
