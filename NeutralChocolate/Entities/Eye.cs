@@ -8,6 +8,7 @@ namespace NeutralChocolate
         private Vector2 position;
         private Collider collider;
         public Rectangle Bounds => collider.bounds;
+        private readonly Vector2 colliderOffest = new Vector2(30,15);
         public int Damage => 1;
         private int health = 5;
         private int speed = 200;
@@ -20,11 +21,12 @@ namespace NeutralChocolate
         private double stopTime = 0d;
         private bool move = true;
         public Vector2 Position => position;
+        public Vector2 Location => Position + colliderOffest;
 
         public Eye(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Eye.Width-30, Art.Eye.Height-5);
+            var bounds = new Rectangle((int)Location.X, (int)Location.Y, Art.Eye.Width-60, Art.Eye.Height-20);
             this.collider = new Collider(bounds);
         }
 
@@ -50,7 +52,7 @@ namespace NeutralChocolate
             if (healthTimer > 0)
                 healthTimer -= dt;
 
-            collider.Update(gameTime, position, mapW, mapH);
+            collider.Update(gameTime, Location, mapW, mapH);
         }
 
         public void Draw(SpriteBatch spriteBatch)

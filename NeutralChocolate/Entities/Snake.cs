@@ -11,6 +11,7 @@ namespace NeutralChocolate
         private int health = 3;
         private int speed = 160;
         private float healthTimer = 0;
+        private readonly Vector2 colliderOffest = new Vector2(10,25);
 
         public int Health
         {
@@ -20,13 +21,14 @@ namespace NeutralChocolate
         private double stopTime = 0d;
         private bool move = true;
         public Vector2 Position => position;
-        public int Damage => 0;
+        public Vector2 Location => Position + colliderOffest;
+        public int Damage => 1;
 
 
         public Snake(Vector2 position)
         {
             this.position = position;
-            var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Snake.Width-10, Art.Snake.Height-20);
+            var bounds = new Rectangle((int)Location.X, (int)Location.Y, Art.Snake.Width-20, Art.Snake.Height-45);
             this.collider = new Collider(bounds);
         }
 
@@ -52,7 +54,7 @@ namespace NeutralChocolate
             if (healthTimer > 0)
                 healthTimer -= dt;
 
-            collider.Update(gameTime, position, mapW, mapH);
+            collider.Update(gameTime, Location, mapW, mapH);
         }
         public void Draw(SpriteBatch spriteBatch)
         {

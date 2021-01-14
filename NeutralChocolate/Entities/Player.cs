@@ -181,7 +181,7 @@ namespace NeutralChocolate
         {
             if (healthTimer <= 0)
             {
-                // health -= damage;
+                health -= damage;
                 healthTimer = 1.5f;
             }
 
