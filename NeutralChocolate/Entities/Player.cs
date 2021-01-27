@@ -14,7 +14,7 @@ namespace NeutralChocolate
         Right
     }
 
-    class Player : IEntity
+    public class Player : IEntity
     {
         // Constants
         private readonly int WIDTH = 54;
@@ -183,6 +183,11 @@ namespace NeutralChocolate
             {
                 health -= damage;
                 healthTimer = 1.5f;
+            }
+
+            if (Health <= 0)
+            {
+                Store.scenes.ChangeScene(SceneName.GameOver);
             }
 
             if (Math.Abs(magnitude.X) < Math.Abs(magnitude.Y))

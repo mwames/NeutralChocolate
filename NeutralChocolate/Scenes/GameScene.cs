@@ -35,26 +35,18 @@ namespace NeutralChocolate
 
             player.Initialize();
 
-            //if object ref not found, make sure you are pulling the latest tiled map version. 
-            var allEnemies = new List<TiledMapObject>(map.GetLayer<TiledMapObjectLayer>("Monsters").Objects);
-            var allObstacles = new List<TiledMapObject>(map.GetLayer<TiledMapObjectLayer>("obstacles").Objects);
-
-            enemies = allEnemies
-                .Select(enemy => (IEnemy)EntityFactory(enemy))
-                .Where((enemy) => enemy != null)
+            enemies = EntityFactory.ReadMapLayer(map, "Monsters")
+                .Cast<IEnemy>()
                 .ToList();
 
-            obstacles = allObstacles
-                .Select(obstacle => EntityFactory(obstacle))
-                .Where(obstacle => obstacle != null)
-                .ToList();
+            obstacles = EntityFactory.ReadMapLayer(map, "obstacles");
         }
         public void Update(GameTime gameTime)
         {
             if (!_dialogBox.Active)
             {
                 player.Update(gameTime, player.Position, map.WidthInPixels, map.HeightInPixels);
-                UpdateCamera();
+                Camera.Update(cam, player.Position, map);
 
                 // Run the update function for each entity.
                 enemies.ForEach(entity => entity.Update(gameTime, player.Position, 0, 0));
@@ -63,7 +55,14 @@ namespace NeutralChocolate
             renderer.Update(gameTime);
 
             // Check collisions
-            ResolvePlayer(player, obstacles.Concat(enemies).ToList());
+            enemies.Concat(obstacles).ToList().ForEach(entity =>
+            {
+                if (Collision.DidCollide(player, entity))
+                {
+                    player.OnCollide(entity.Damage, Collision.GetDeflection(player, entity));
+                }
+            });
+
             bullets.ForEach(bullet => ResolveBullet(bullet, enemies));
 
             // Remove any necessary entities after collision resolution.
@@ -83,7 +82,7 @@ namespace NeutralChocolate
                 }
             }
             if (Input.WasPressed(Buttons.Start))
-                 Store.scenes.ChangeScene(SceneName.Pause);
+                Store.scenes.ChangeScene(SceneName.Pause);
 
 
         }
@@ -94,31 +93,24 @@ namespace NeutralChocolate
             // World space
             spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());
-           
-            if (player.Health > 0)
+
+            player.Draw(spriteBatch);
+
+            // left side 
+            if (player.Position.X >= 0 && player.Position.X <= 60 && player.Position.Y >= 640 && player.Position.Y <= 916)
             {
-                player.Draw(spriteBatch);
-
-                // left side 
-                if (player.Position.X >= 0 && player.Position.X <= 60 && player.Position.Y >= 640 && player.Position.Y <= 916)
-                {
-                    Store.scenes.ChangeScene(SceneName.Town);
-                }
-
-                // top
-                if (player.Position.X >= 1025 && player.Position.X <= 1217 && player.Position.Y >= 0 && player.Position.Y <= 60)
-                {
-                    spriteBatch.DrawRectangle(1025, 0, 192, 60, Color.Blue);
-                }
-
-                enemies.ForEach(enemy => enemy.Draw(spriteBatch));
-                bullets.ForEach(bullet => bullet.Draw(spriteBatch));
-                obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
+                Store.scenes.ChangeScene(SceneName.Town);
             }
-            else
+
+            // top
+            if (player.Position.X >= 1025 && player.Position.X <= 1217 && player.Position.Y >= 0 && player.Position.Y <= 60)
             {
-                Store.scenes.ChangeScene(SceneName.GameOver);
+                spriteBatch.DrawRectangle(1025, 0, 192, 60, Color.Blue);
             }
+
+            enemies.ForEach(enemy => enemy.Draw(spriteBatch));
+            bullets.ForEach(bullet => bullet.Draw(spriteBatch));
+            obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
             spriteBatch.End();
 
             // Screen space
@@ -138,128 +130,16 @@ namespace NeutralChocolate
             spriteBatch.End();
         }
 
-        private IEntity EntityFactory(TiledMapObject tmo)
-        {
-            string type;
-            tmo.Properties.TryGetValue("Type", out type);
-
-            switch (type)
-            {
-                case "Snake":
-                    return new Snake(tmo.Position);
-                case "Eye":
-                    return new Eye(tmo.Position);
-                case "Tree":
-                    return new Tree(tmo.Position);
-                case "Bush":
-                    return new Bush(tmo.Position);
-                default:
-                    return null;
-            }
-        }
-
-        private void UpdateCamera()
-        {
-            // Camera logic
-            float tempX = player.Position.X;
-            float tempY = player.Position.Y;
-            int camW = Winder.Width;
-            int camH = Winder.Height;
-            int mapW = map.WidthInPixels;
-            int mapH = map.HeightInPixels;
-
-            if (tempX < camW / 2)
-            {
-                tempX = camW / 2;
-            }
-
-            if (tempY < camH / 2)
-            {
-                tempY = camH / 2;
-            }
-
-            if (tempX > (mapW - (camW / 2)))
-            {
-                tempX = (mapW - (camW / 2));
-            }
-
-            if (tempY > (mapH - (camH / 2)))
-            {
-                tempY = (mapH - (camH / 2));
-            }
-
-            cam.LookAt(new Vector2(tempX, tempY));
-        }
-
-        private bool Bonked(IEntity entity1, IEntity entity2)
-        {
-            return entity1.Bounds.Intersects(entity2.Bounds);
-        }
-
         private void ResolveBullet(IEnemy bullet, List<IEnemy> enemies)
         {
             enemies.ForEach(enemy =>
             {
-                if (Bonked(bullet, enemy))
+                if (Collision.DidCollide(bullet, enemy))
                 {
                     bullet.OnHit();
                     enemy.OnHit();
                 }
-                if (DidCollide(bullet))
-                {
-                    bullet.OnHit();
-                }
             });
-        }
-
-        private Vector2 GetDeflection(Player player, IEntity entity)
-        {
-            var deflection = new Vector2();
-
-            // Set the X component
-            if (player.Bounds.Center.X > entity.Bounds.Center.X)
-            {
-                deflection.X = entity.Bounds.Right - player.Bounds.Left;
-            }
-            else
-            {
-                deflection.X = entity.Bounds.Left - player.Bounds.Right;
-            }
-
-            // Set the Y component
-            if (player.Bounds.Center.Y > entity.Bounds.Center.Y) {
-                deflection.Y = entity.Bounds.Bottom - player.Bounds.Top;
-            }
-            else
-            {
-                deflection.Y = entity.Bounds.Top - player.Bounds.Bottom;
-            }
-
-            return deflection;
-        }
-
-        private void ResolvePlayer(Player player, List<IEntity> entities)
-        {
-            entities.ForEach(entity =>
-            {
-                if (Bonked(player, entity))
-                {
-                    player.OnCollide(entity.Damage, GetDeflection(player, entity));
-                    return;
-                }
-            });
-        }
-
-        private bool DidCollide(IEntity otherEntity)
-        {
-            foreach (IEntity o in obstacles)
-            {
-                if (o.Bounds.Intersects(otherEntity.Bounds))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }
