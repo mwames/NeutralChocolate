@@ -11,6 +11,8 @@ namespace NeutralChocolate
         public int Damage => 0;
         public Vector2 Position => position;
 
+        public int Health { get => 1; set => Health = 1; }
+
         public Bush(Vector2 position)
         {
             this.position = position;
@@ -29,6 +31,11 @@ namespace NeutralChocolate
                 collider.Draw(spriteBatch);
             }
             spriteBatch.Draw(Art.Bush, position, Color.White);
+        }
+
+        public void OnHit(int damage, Vector2 magnitude)
+        {
+        
         }
     }
 }

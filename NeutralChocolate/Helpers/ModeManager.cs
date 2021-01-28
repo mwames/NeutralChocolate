@@ -7,7 +7,8 @@ namespace NeutralChocolate
         Normal,
         Debug,
         Collider,
-        Editor
+        Editor,
+        God
     }
 
     public enum DebugOptions

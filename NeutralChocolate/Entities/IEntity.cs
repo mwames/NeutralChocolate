@@ -7,15 +7,10 @@ namespace NeutralChocolate
     {
         Rectangle Bounds { get; }
         Vector2 Position { get; }
+        int Health { get; set; }
         int Damage { get; }
         void Update(GameTime gameTime, Vector2 playerPos, int mapW, int mapH);
         void Draw(SpriteBatch spriteBatch);
-    }
-
-    public interface IEnemy : IEntity
-    {
-        int Health { get; set; }
-        void OnHit();
-
+        void OnHit(int damage, Vector2 magnitude);
     }
 }

@@ -7,25 +7,21 @@ using Microsoft.Xna.Framework.Input;
 
 namespace NeutralChocolate
 {
-    class Projectile : IEnemy
+    class Projectile : IEntity
     {
         private readonly int SPEED = 800;
         private Collider collider;
         public Rectangle Bounds => collider.bounds;
-        private int health = 1;
         private Vector2 position;
         private Dir direction;
         public Vector2 Position => position;
         public int Damage => 0;
 
-        public int Health
-        {
-            get => health;
-            set => health = value;
-        }
+        public int Health { get; set; }
 
         public Projectile(Vector2 position, Dir direction)
         {
+            Health = 1;
             this.position = position;
             this.direction = direction;
             var bounds = new Rectangle((int)position.X, (int)position.Y, Art.Bullet.Width, Art.Bullet.Height);
@@ -66,7 +62,7 @@ namespace NeutralChocolate
             spriteBatch.Draw(Art.Bullet, position, Color.White);
         }
 
-        public void OnHit()
+        public void OnHit(int damage, Vector2 magnitude)
         {
             Health -= 1;
         }

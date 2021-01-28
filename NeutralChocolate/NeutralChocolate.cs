@@ -48,8 +48,6 @@ namespace NeutralChocolate
             Store.scenes.Add(SceneName.GameOver, new GameOverScene());
             Store.scenes.Add(SceneName.Town, new TownScene(GraphicsDevice, townMap));
             Store.scenes.ChangeScene(SceneName.TitleScene);
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -59,11 +57,11 @@ namespace NeutralChocolate
                 Exit();
             if (Input.WasPressed(Keys.F1))
                 Store.modes.Toggle(Mode.Collider);
+            if (Input.WasPressed(Keys.F2))
+                Store.modes.Toggle(Mode.God);
 
             Store.scenes.Scene.Update(gameTime);
             base.Update(gameTime);
-
-
         }
 
         protected override void Draw(GameTime gameTime)

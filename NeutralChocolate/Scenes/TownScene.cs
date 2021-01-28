@@ -16,7 +16,7 @@ namespace NeutralChocolate
         private TiledMap map;
         private OrthographicCamera cam;
         private Player player;
-        private List<IEnemy> bullets = new List<IEnemy>();
+        private List<IEntity> bullets = new List<IEntity>();
 
         private List<IEntity> obstacles = new List<IEntity>();
 
@@ -32,8 +32,6 @@ namespace NeutralChocolate
             cam = new OrthographicCamera(graphicsDevice);
             player = new Player(bullets);
             _dialogBox = new DialogBox();
-
-            player.Initialize();
 
             //if object ref not found, make sure you are pulling the latest tiled map version. 
             var allObstacles = new List<TiledMapObject>(map.GetLayer<TiledMapObjectLayer>("obstacles").Objects);

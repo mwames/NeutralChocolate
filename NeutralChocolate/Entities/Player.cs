@@ -22,12 +22,11 @@ namespace NeutralChocolate
 
         // Private member variables
         private AnimatedSprite[] animations;
-        private List<IEnemy> bullets;
+        private List<IEntity> bullets;
         private Collider collider;
         public Rectangle Bounds => collider.bounds;
         private KeyboardState kStateOld = Keyboard.GetState();
         private Dir direction = Dir.Down;
-        private int health = 5;
         private int speed = 300;
         private float healthTimer = 0f;
         private float shootRate = 0f;
@@ -38,10 +37,11 @@ namespace NeutralChocolate
         public int Damage => 0;
         private AnimatedSprite Animation => animations[(int)direction];
         public Vector2 Position => position;
-        public int Health => health;
+        public int Health { get; set; }
 
-        public Player(List<IEnemy> bullets)
+        public Player(List<IEntity> bullets)
         {
+            Health = 5;
             this.bullets = bullets;
             this.collider = new Collider(
                 new Rectangle(
@@ -51,10 +51,7 @@ namespace NeutralChocolate
                     HEIGHT
                 )
             );
-        }
 
-        public void Initialize()
-        {
             animations = new[] {
                 new AnimatedSprite(Art.PlayerDown, 1, 4),
                 new AnimatedSprite(Art.PlayerUp, 1, 4),
@@ -113,7 +110,7 @@ namespace NeutralChocolate
                 shootRate -= dt;
             if (healthTimer > 0)
                 healthTimer -= dt;
-            if (health > 0)
+            if (Health > 0)
             {
                 isMoving = false;
                 var tempPos = position;
@@ -177,11 +174,11 @@ namespace NeutralChocolate
             collider.Update(gameTime, position, mapW, mapH);
         }
 
-        public void OnCollide(int damage, Vector2 magnitude)
+        public void OnHit(int damage, Vector2 magnitude)
         {
-            if (healthTimer <= 0)
+            if (healthTimer <= 0  && Store.modes.currentMode != Mode.God)
             {
-                health -= damage;
+                Health -= damage;
                 healthTimer = 1.5f;
             }
 

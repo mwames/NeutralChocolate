@@ -3,30 +3,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NeutralChocolate
 {
-    class Snake : IEnemy
+    class Snake : IEntity
     {
         private Vector2 position;
         private Collider collider;
         public Rectangle Bounds => collider.bounds;
-        private int health = 3;
         private int speed = 160;
         private float healthTimer = 0;
         private readonly Vector2 colliderOffest = new Vector2(10,25);
+        public Vector2 Location => Position + colliderOffest;
 
-        public int Health
-        {
-            get { return health; }
-            set { health = value; }
-        }
+        public int Health{ get; set; }
         private double stopTime = 0d;
         private bool move = true;
         public Vector2 Position => position;
-        public Vector2 Location => Position + colliderOffest;
         public int Damage => 1;
 
 
         public Snake(Vector2 position)
         {
+            Health = 3;
             this.position = position;
             var bounds = new Rectangle((int)Location.X, (int)Location.Y, Art.Snake.Width-20, Art.Snake.Height-45);
             this.collider = new Collider(bounds);
@@ -65,11 +61,11 @@ namespace NeutralChocolate
             spriteBatch.Draw(Art.Snake, position, Color.White);
         }
 
-        public void OnHit()
+        public void OnHit(int damage, Vector2 magnitude)
         {
             if (healthTimer <= 0)
             {
-                health -= 1;
+                Health -= 1;
                 move = false;
                 stopTime = -0.5d;
                 healthTimer = .5f;
