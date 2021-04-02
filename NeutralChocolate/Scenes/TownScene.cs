@@ -67,15 +67,15 @@ namespace NeutralChocolate
 
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
+        public void Draw(NeutralChocolate game)
         {
 
             // World space
-            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
+            game.spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());
             if (player.Health > 0)
             {
-                player.Draw(spriteBatch);
+                player.Draw(game.spriteBatch);
 
                 // Right side 
                 if (player.Position.X <= map.WidthInPixels && player.Position.X >= map.WidthInPixels - 60 && player.Position.Y >= 640 && player.Position.Y <= 916)
@@ -85,27 +85,27 @@ namespace NeutralChocolate
                     //spriteBatch.Draw(Art.Tree, new Vector2(200,500),Color.Brown);
                 }
 
-                obstacles.ForEach(obstacle => obstacle.Draw(spriteBatch));
-                bullets.ForEach(bullet => bullet.Draw(spriteBatch));
+                obstacles.ForEach(obstacle => obstacle.Draw(game.spriteBatch));
+                bullets.ForEach(bullet => bullet.Draw(game.spriteBatch));
             }
-            spriteBatch.End();
+            game.spriteBatch.End();
 
 
             // Screen space
-            spriteBatch.Begin();
+            game.spriteBatch.Begin();
             for (int i = 0; i < player.Health; i++)
             {
-                spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
+                game.spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
             }
-            spriteBatch.End();
+            game.spriteBatch.End();
 
             // NOTE: The NonPremultiplied blendstate is used to make the dialog box partially transparent
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            game.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
             // Draw the dialog box to the screen
-            _dialogBox.Draw(spriteBatch);
+            _dialogBox.Draw(game.spriteBatch);
 
-            spriteBatch.End();
+            game.spriteBatch.End();
         }
 
         private IEntity EntityFactory(TiledMapObject tmo)

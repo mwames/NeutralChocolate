@@ -77,13 +77,13 @@ namespace NeutralChocolate
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
+        public void Draw(NeutralChocolate game)
         {
             // World space
-            spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
+            game.spriteBatch.Begin(transformMatrix: cam.GetViewMatrix());
             renderer.Draw(cam.GetViewMatrix());
 
-            player.Draw(spriteBatch);
+            player.Draw(game.spriteBatch);
 
             // left side 
             if (player.Position.X >= 0 && player.Position.X <= 60 && player.Position.Y >= 640 && player.Position.Y <= 916)
@@ -94,28 +94,28 @@ namespace NeutralChocolate
             // top
             if (player.Position.X >= 1025 && player.Position.X <= 1217 && player.Position.Y >= 0 && player.Position.Y <= 60)
             {
-                spriteBatch.DrawRectangle(1025, 0, 192, 60, Color.Blue);
+                game.spriteBatch.DrawRectangle(1025, 0, 192, 60, Color.Blue);
             }
 
-            entities.ForEach(enemy => enemy.Draw(spriteBatch));
-            bullets.ForEach(bullet => bullet.Draw(spriteBatch));
-            spriteBatch.End();
+            entities.ForEach(enemy => enemy.Draw(game.spriteBatch));
+            bullets.ForEach(bullet => bullet.Draw(game.spriteBatch));
+            game.spriteBatch.End();
 
             // Screen space
-            spriteBatch.Begin();
+            game.spriteBatch.Begin();
             for (int i = 0; i < player.Health; i++)
             {
-                spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
+                game.spriteBatch.Draw(Art.Heart, new Vector2(i * 63, 0), Color.White);
             }
-            spriteBatch.End();
+            game.spriteBatch.End();
 
             // NOTE: The NonPremultiplied blendstate is used to make the dialog box partially transparent
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            game.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
             // Draw the dialog box to the screen
-            dialogBox.Draw(spriteBatch);
+            dialogBox.Draw(game.spriteBatch);
 
-            spriteBatch.End();
+            game.spriteBatch.End();
         }
 
         private void ResolveBullet(IEntity bullet, List<IEntity> enemies)

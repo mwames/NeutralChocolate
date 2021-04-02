@@ -6,6 +6,6 @@ namespace NeutralChocolate
     public interface IScene
     {
         void Update(GameTime gameTime);
-        void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice);
+        void Draw(NeutralChocolate game);
     }
 }

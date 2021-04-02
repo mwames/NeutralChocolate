@@ -38,14 +38,14 @@ namespace NeutralChocolate
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
+        public void Draw(NeutralChocolate game)
         {
-            spriteBatch.Begin();
+            game.spriteBatch.Begin();
             var gameOverMessage = "So Sad";
-            var stringBox = spriteFont.MeasureString(gameOverMessage);
-            graphicsDevice.Clear(Color.DarkBlue);
-            spriteBatch.DrawString(
-                spriteFont,
+            var stringBox = game.font.MeasureString(gameOverMessage);
+            game.GraphicsDevice.Clear(Color.DarkBlue);
+            game.spriteBatch.DrawString(
+                game.font,
                 gameOverMessage,
                 new Vector2(
                     Winder.Width / 2 - stringBox.X / 2,
@@ -54,27 +54,27 @@ namespace NeutralChocolate
                 Color.DarkGoldenrod
             );
 
-            spriteBatch.DrawString(spriteFont, "Choose your fate", new Vector2(Winder.Width / 2 - 150, Winder.Height - 200), Color.DarkGoldenrod);
+            game.spriteBatch.DrawString(game.font, "Choose your fate", new Vector2(Winder.Width / 2 - 150, Winder.Height - 200), Color.DarkGoldenrod);
             if (again)
             {
-                spriteBatch.DrawString(spriteFont, "Try Again", new Vector2(Winder.Width / 2 - 150, Winder.Height - 150), Color.Yellow);
+                game.spriteBatch.DrawString(game.font, "Try Again", new Vector2(Winder.Width / 2 - 150, Winder.Height - 150), Color.Yellow);
             }
             else
             {
-                spriteBatch.DrawString(spriteFont, "Try Again", new Vector2(Winder.Width / 2 - 150, Winder.Height - 150), Color.DarkGoldenrod);
+                game.spriteBatch.DrawString(game.font, "Try Again", new Vector2(Winder.Width / 2 - 150, Winder.Height - 150), Color.DarkGoldenrod);
             }
 
             if (exit)
             {
-                spriteBatch.DrawString(spriteFont, "Exit", new Vector2(Winder.Width / 2 + 25, Winder.Height - 150), Color.Yellow);
+                game.spriteBatch.DrawString(game.font, "Exit", new Vector2(Winder.Width / 2 + 25, Winder.Height - 150), Color.Yellow);
             }
 
             else
             {
-                spriteBatch.DrawString(spriteFont, "Exit", new Vector2(Winder.Width / 2 + 25, Winder.Height - 150), Color.DarkGoldenrod);
+                game.spriteBatch.DrawString(game.font, "Exit", new Vector2(Winder.Width / 2 + 25, Winder.Height - 150), Color.DarkGoldenrod);
             }
 
-            spriteBatch.End();
+            game.spriteBatch.End();
 
         }
     }

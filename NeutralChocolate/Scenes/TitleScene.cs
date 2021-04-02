@@ -52,11 +52,11 @@ namespace NeutralChocolate
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
+        public void Draw(NeutralChocolate game)
         {
-            graphicsDevice.Clear(Color.LightSkyBlue);
-            spriteBatch.Begin();
-            spriteBatch.Draw(
+            game.GraphicsDevice.Clear(Color.LightSkyBlue);
+            game.spriteBatch.Begin();
+            game.spriteBatch.Draw(
               Art.PlayerDown,
               new Rectangle(0, MARGIN_TOP, Winder.Width, Winder.Height / 2),
                 new Color(255, 255, 255, MathHelper.Clamp(mAlphaValue, 0, 255))
@@ -66,30 +66,30 @@ namespace NeutralChocolate
             var optionsColor = options ? Color.Yellow : Color.White;
 
             var playButton = Art.PlayButton;
-            spriteBatch.Draw(
+            game.spriteBatch.Draw(
                 playButton,
                 new Rectangle((Winder.Width / 2) - 96 - 10, (Winder.Height / 2) + MARGIN_TOP * 2, 96, 54),
                 startColor
             );
 
-            spriteBatch.Draw(
+            game.spriteBatch.Draw(
                 Art.OptionsButton,
                 new Rectangle((Winder.Width / 2) + 10, Winder.Height / 2 + MARGIN_TOP * 2, 110, 54),
                 optionsColor
             );
 
-            spriteBatch.DrawString(
-                spriteFont,
+            game.spriteBatch.DrawString(
+                game.font,
                 MESSAGE,
                 new Vector2(
-                    Winder.Width / 2 - spriteFont.MeasureString(MESSAGE).X / 2,
+                    Winder.Width / 2 - game.font.MeasureString(MESSAGE).X / 2,
                     Winder.Height / 2 - 30 + MARGIN_TOP
                 ),
                 Color.Black
                 );
 
-            spriteBatch.DrawString(
-            spriteFont,
+            game.spriteBatch.DrawString(
+            game.font,
             COMPANY,
             new Vector2(
                 Winder.Width / 2 - 150,
@@ -98,7 +98,7 @@ namespace NeutralChocolate
             Color.Black
             );
 
-            spriteBatch.End();
+            game.spriteBatch.End();
         }
     }
 }

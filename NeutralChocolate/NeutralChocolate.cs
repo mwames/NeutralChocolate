@@ -7,9 +7,9 @@ namespace NeutralChocolate
 {
     public class NeutralChocolate : Game
     {
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-        private SpriteFont font;
+        public GraphicsDeviceManager graphics;
+        public SpriteBatch spriteBatch;
+        public SpriteFont font;
 
         public NeutralChocolate()
         {
@@ -67,7 +67,7 @@ namespace NeutralChocolate
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.ForestGreen);
-            Store.scenes.Scene.Draw(spriteBatch, font, GraphicsDevice);
+            Store.scenes.Scene.Draw(this);
             base.Draw(gameTime);
         }
     }

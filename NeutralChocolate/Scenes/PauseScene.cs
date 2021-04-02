@@ -13,21 +13,21 @@ namespace NeutralChocolate
                 Store.scenes.ChangeScene(SceneName.Game);
             }
         }
-        public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont, GraphicsDevice graphicsDevice)
+        public void Draw(NeutralChocolate game)
         {
-            spriteBatch.Begin();
+            game.spriteBatch.Begin();
             string gameOverMessage = "- PAUSE -";
-            graphicsDevice.Clear(Color.DarkCyan);
-            spriteBatch.DrawString(
-                spriteFont,
+            game.GraphicsDevice.Clear(Color.DarkCyan);
+            game.spriteBatch.DrawString(
+                game.font,
                 gameOverMessage,
                 new Vector2(
-                    Winder.Width / 2 - spriteFont.MeasureString(gameOverMessage).X / 2,
+                    Winder.Width / 2 - game.font.MeasureString(gameOverMessage).X / 2,
                     Winder.Height / 2 - 20
                 ),
                 Color.Black
                 );
-            spriteBatch.End();
+            game.spriteBatch.End();
         }
     }
 }
