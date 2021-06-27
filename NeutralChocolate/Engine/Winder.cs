@@ -7,7 +7,6 @@ namespace NeutralChocolate
     {
         private static GameWindow window = null;
         public static SpriteFont spriteFont = null;
-        public static GraphicsDevice graphicsDevice;
         public static void Initialize(GameWindow window, SpriteFont spriteFont)
         {
             if (Winder.window != null || Winder.spriteFont != null)

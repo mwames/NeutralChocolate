@@ -10,9 +10,6 @@ namespace DebugZone
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Texture2D eye;
-
-        private float offsetX = 0;
-        private float offsetY = 0;
         private Camera camera;
         private Model model;
         private Matrix world1 = Matrix.CreateTranslation(new Vector3(0, 0, 0));
@@ -34,7 +31,8 @@ namespace DebugZone
             graphics.ApplyChanges();
             font = Content.Load<SpriteFont>("gameFont");
             model = Content.Load<Model>("human");
-            camera = new Camera(new Vector3(0, -5, 0), new Vector3(0, 0, 0));
+            camera = new Camera(new Vector3(0, -5, 0), Vector3.UnitY, Vector3.UnitZ);
+            Screen.Initialize(this.Window);
             base.Initialize();
         }
 

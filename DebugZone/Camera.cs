@@ -1,20 +1,32 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace DebugZone
 {
-    public class Camera {
+    public class Camera
+    {
 
         public Vector3 position;
-        public Vector3 target;
+        public Vector3 lookAt;
+        public Vector3 up;
+        public Vector3 forward;
+
         public Point mousePrevious;
         public Point mouseCurrent;
+        public float speed = 0.5f;
+        float mouseAmount = 0.005f;
 
-        public Camera(Vector3 position, Vector3 target)
+        public Camera(Vector3 position, Vector3 forward, Vector3 up)
         {
             this.position = position;
-            this.target = target;
+
+            this.forward = forward;
+            forward.Normalize();
+
+            this.lookAt = this.position + this.forward;
+            this.up = up;
         }
 
         public Vector3 Transform(Matrix matrix, Vector3 vector)
@@ -33,89 +45,81 @@ namespace DebugZone
 
         public void Update()
         {
+            updatePosition();
+            updateForward();
+            updateLookAt();
+        }
+
+        private void updatePosition()
+        {
             var kb = Keyboard.GetState();
-            
-            AngleBetween(Vector3.UnitY, target + position);
+
+            Vector3 direction = copyAndNormalize(forward);
+            Vector3 normal = Vector3.Cross(direction, up);
 
             if (kb.IsKeyDown(Keys.W))
             {
-                var delta = new Vector3(0, 1, 0);
-                position += delta;
-                target += delta;
+                position += forward * speed;
             }
             if (kb.IsKeyDown(Keys.A))
             {
-                var delta = new Vector3(-1, 0, 0);
-                position += delta;
-                target += delta;
+                position -= normal * speed;
             }
             if (kb.IsKeyDown(Keys.S))
             {
-                var delta = new Vector3(0, -1, 0);
-                position += delta;
-                target += delta;
+                position -= forward * speed;
             }
             if (kb.IsKeyDown(Keys.D))
             {
-                var delta = new Vector3(1, 0, 0);
-                position += delta;
-                target += delta;
+                position += normal * speed;
             }
+        }
 
+        private void updateForward() {
             // Mouse
             mousePrevious = mouseCurrent;
             mouseCurrent = Mouse.GetState().Position;
             var mouseDiff = mouseCurrent - mousePrevious;
 
-            if (kb.IsKeyDown(Keys.Left))
-            {
-                var rotation = Matrix.CreateRotationZ((float)ToRadians(-1));
-                var mockTarget = Transform(rotation, target - position);
-                target = mockTarget;
-            }
-            if (kb.IsKeyDown(Keys.Right))
-            {
-                var rotation = Matrix.CreateRotationZ((float)ToRadians(1));
-                var mockTarget = Transform(rotation, target - position);
-                target = mockTarget;
-            }
-            // if (mouseDiff.Y < 0)
-            // {
-            //     var toTheUp = Vector3.Forward * Math.Abs(mouseDiff.Y);
-            //     //System.Console.WriteLine("toTheUp");
-            //     target += toTheUp;
-            // }
-            // if (mouseDiff.Y > 0)
-            // {
-            //     var toTheDown = Vector3.Backward * Math.Abs(mouseDiff.Y);
-            //     //System.Console.WriteLine("toTheDown");
-            //     target += toTheDown;
-            // }
+            Vector3 direction = copyAndNormalize(forward);
+            Vector3 normal = Vector3.Cross(direction, up);
 
+            float y = mouseDiff.Y;
+            float x = mouseDiff.X;
+
+            y *= Screen.Height/800.0f;
+            x *= Screen.Width/1280.0f;
+
+            forward += x * mouseAmount * normal;
+
+            forward -= y * mouseAmount * up;
+            forward.Normalize();
         }
 
-        public double ToDegrees(double radians) {
-            return radians * (180/Math.PI);
+        private void updateLookAt() {
+            lookAt = position + forward;
         }
 
-        public double ToRadians(double degrees) {
-            return degrees * (Math.PI/180);
+        private Vector3 copyAndNormalize(Vector3 vector)
+        {
+            Vector3 copy = new Vector3(vector.X, vector.Y, vector.Z);
+            copy.Normalize();
+            return copy;
         }
 
-        public double AngleBetween(Vector3 a, Vector3 b) {
-            var dot = Vector3.Dot(a, b);
-            var magA = Vector3.Distance(Vector3.Zero, a);
-            var magB = Vector3.Distance(Vector3.Zero, b);
-            var prod = magA * magB;
-            var quot = (double)(dot / prod);
-
-            var angle = Math.Acos(quot);
-
-            return ToDegrees(angle);
+        public double ToDegrees(double radians)
+        {
+            return radians * (180 / Math.PI);
         }
 
-        public Matrix GetView() {
-            return Matrix.CreateLookAt(position, target, Vector3.UnitZ);
+        public float ToRadians(int degrees)
+        {
+            return (float)(degrees * (Math.PI / 180));
+        }
+
+        public Matrix GetView()
+        {
+            return Matrix.CreateLookAt(position, lookAt, up);
         }
     }
 }
