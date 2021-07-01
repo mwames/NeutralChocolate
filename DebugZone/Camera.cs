@@ -79,6 +79,7 @@ namespace DebugZone
             // Mouse
             mousePrevious = mouseCurrent;
             mouseCurrent = Mouse.GetState().Position;
+            
             var mouseDiff = mouseCurrent - mousePrevious;
 
             Vector3 direction = copyAndNormalize(forward);
@@ -94,6 +95,11 @@ namespace DebugZone
 
             forward -= y * mouseAmount * up;
             forward.Normalize();
+
+            var pos = new Point(Screen.Width / 2, Screen.Height / 2);
+            mousePrevious = pos;
+            mouseCurrent = pos;
+            Mouse.SetPosition(pos.X, pos.Y);
         }
 
         private void updateLookAt() {
