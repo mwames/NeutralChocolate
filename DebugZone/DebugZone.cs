@@ -16,6 +16,12 @@ namespace DebugZone
         private Matrix world2 = Matrix.CreateTranslation(new Vector3(-10, 0, 0));
         private Matrix world3 = Matrix.CreateTranslation(new Vector3(10, 0, 0));
         private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.1f, 100f);
+        private BasicEffect basicEffect;
+
+        private int x = 270;
+        private int y = 0;
+        private int z = 0;
+
 
         public DebugZone()
         {
@@ -31,7 +37,7 @@ namespace DebugZone
             graphics.ApplyChanges();
             font = Content.Load<SpriteFont>("gameFont");
             model = Content.Load<Model>("human");
-            camera = new Camera(new Vector3(0, -5, 0), Vector3.UnitY, Vector3.UnitZ);
+            camera = new Camera(new Vector3(0, -50, 0), new Vector3(0, 50, 0), Vector3.UnitZ);
             Screen.Initialize(this.Window);
             base.Initialize();
         }
@@ -40,6 +46,11 @@ namespace DebugZone
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             eye = Content.Load<Texture2D>("Enemies/eyeEnemy");
+            basicEffect = new BasicEffect(GraphicsDevice)
+            {
+                TextureEnabled = true,
+                VertexColorEnabled = true,
+            };
         }
 
         protected override void Update(GameTime gameTime)
@@ -50,6 +61,16 @@ namespace DebugZone
                 Exit();
             }
 
+            if (kb.IsKeyDown(Keys.X)) {
+                x = (x + 1) % 360;
+            }
+            if (kb.IsKeyDown(Keys.Y)) {
+                y = (y + 1) % 360;
+            }
+            if (kb.IsKeyDown(Keys.Z)) {
+                z = (z + 1) % 360;
+            }
+
             camera.Update();
 
             base.Update(gameTime);
@@ -58,9 +79,30 @@ namespace DebugZone
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.ForestGreen);
-            DrawModel(model, world1, camera.GetView(), projection);
-            DrawModel(model, world2, camera.GetView(), projection);
-            DrawModel(model, world3, camera.GetView(), projection);
+
+            var view = camera.GetView();
+            DrawModel(model, world1, view, this.projection);
+            DrawModel(model, world2, view, this.projection);
+            DrawModel(model, world3, view, this.projection);
+
+            basicEffect.World = Matrix.CreateScale(0.1f)
+                * Matrix.CreateRotationX(MathHelper.ToRadians(x))
+                * Matrix.CreateRotationY(MathHelper.ToRadians(y))
+                * Matrix.CreateRotationZ(MathHelper.ToRadians(z));
+
+            basicEffect.View = view;
+            basicEffect.Projection = projection;
+
+            spriteBatch.Begin(0, null, null, DepthStencilState.DepthRead, RasterizerState.CullNone, basicEffect);
+            spriteBatch.Draw(eye, Vector2.Zero, Color.White);
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+            spriteBatch.DrawString(font, $"X: {x}", new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(font, $"Y: {y}", new Vector2(10, 60), Color.White);
+            spriteBatch.DrawString(font, $"Z: {z}", new Vector2(10, 110), Color.White);
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
 
