@@ -18,11 +18,6 @@ namespace DebugZone
         private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.1f, 100f);
         private BasicEffect basicEffect;
 
-        private int x = 270;
-        private int y = 0;
-        private int z = 0;
-
-
         public DebugZone()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -61,16 +56,6 @@ namespace DebugZone
                 Exit();
             }
 
-            if (kb.IsKeyDown(Keys.X)) {
-                x = (x + 1) % 360;
-            }
-            if (kb.IsKeyDown(Keys.Y)) {
-                y = (y + 1) % 360;
-            }
-            if (kb.IsKeyDown(Keys.Z)) {
-                z = (z + 1) % 360;
-            }
-
             camera.Update();
 
             base.Update(gameTime);
@@ -85,22 +70,15 @@ namespace DebugZone
             DrawModel(model, world2, view, this.projection);
             DrawModel(model, world3, view, this.projection);
 
-            basicEffect.World = Matrix.CreateScale(0.1f)
-                * Matrix.CreateRotationX(MathHelper.ToRadians(x))
-                * Matrix.CreateRotationY(MathHelper.ToRadians(y))
-                * Matrix.CreateRotationZ(MathHelper.ToRadians(z));
+            basicEffect.World = Matrix.CreateScale(0.05f)
+                * Matrix.CreateRotationZ(MathHelper.ToRadians(180))
+                * Matrix.CreateConstrainedBillboard(Vector3.Zero, camera.position, Vector3.UnitZ, null, null);
 
             basicEffect.View = view;
             basicEffect.Projection = projection;
 
             spriteBatch.Begin(0, null, null, DepthStencilState.DepthRead, RasterizerState.CullNone, basicEffect);
             spriteBatch.Draw(eye, Vector2.Zero, Color.White);
-            spriteBatch.End();
-
-            spriteBatch.Begin();
-            spriteBatch.DrawString(font, $"X: {x}", new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(font, $"Y: {y}", new Vector2(10, 60), Color.White);
-            spriteBatch.DrawString(font, $"Z: {z}", new Vector2(10, 110), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
