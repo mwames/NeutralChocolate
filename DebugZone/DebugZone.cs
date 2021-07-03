@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,6 +11,7 @@ namespace DebugZone
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Texture2D eye;
+        private Texture2D snake;
         private Camera camera;
         private Model model;
         private Matrix world1 = Matrix.CreateTranslation(new Vector3(0, 0, 0));
@@ -17,6 +19,7 @@ namespace DebugZone
         private Matrix world3 = Matrix.CreateTranslation(new Vector3(10, 0, 0));
         private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.1f, 100f);
         private BasicEffect basicEffect;
+        private List<Enemy> enemies = new List<Enemy>();
 
         public DebugZone()
         {
@@ -41,11 +44,14 @@ namespace DebugZone
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             eye = Content.Load<Texture2D>("Enemies/eyeEnemy");
+            snake = Content.Load<Texture2D>("Enemies/snakeEnemy");
             basicEffect = new BasicEffect(GraphicsDevice)
             {
                 TextureEnabled = true,
                 VertexColorEnabled = true,
             };
+            enemies.Add(new Enemy(new Vector3(-200, 100, 0), eye, -1));
+            enemies.Add(new Enemy(new Vector3(100, -200, 0), snake, 1));
         }
 
         protected override void Update(GameTime gameTime)
@@ -57,6 +63,11 @@ namespace DebugZone
             }
 
             camera.Update();
+
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Update();
+            }
 
             base.Update(gameTime);
         }
@@ -78,7 +89,10 @@ namespace DebugZone
             basicEffect.Projection = projection;
 
             spriteBatch.Begin(0, null, null, DepthStencilState.DepthRead, RasterizerState.CullNone, basicEffect);
-            spriteBatch.Draw(eye, Vector2.Zero, Color.White);
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Draw(spriteBatch, view);
+            }
             spriteBatch.End();
 
             base.Draw(gameTime);

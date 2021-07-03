@@ -85,15 +85,14 @@ namespace DebugZone
             Vector3 direction = copyAndNormalize(forward);
             Vector3 normal = Vector3.Cross(direction, up);
 
-            float y = mouseDiff.Y;
             float x = mouseDiff.X;
-
-            y *= Screen.Height/800.0f;
             x *= Screen.Width/1280.0f;
-
             forward += x * mouseAmount * normal;
 
+            float y = mouseDiff.Y;
+            y *= Screen.Height/800.0f;
             forward -= y * mouseAmount * up;
+
             forward.Normalize();
 
             var pos = new Point(Screen.Width / 2, Screen.Height / 2);
