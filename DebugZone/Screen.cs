@@ -7,20 +7,10 @@ namespace DebugZone
 {
     public static class Screen
     {
-        private static GameWindow window = null;
-        public static int Height => window.ClientBounds.Height;
-        public static int Width => window.ClientBounds.Width;
-
-        public static void Initialize(GameWindow window)
-        {
-            if (Screen.window != null)
-            {
-                throw new System.Exception("Winder has already been initialized. Do not mutate shared state.");
-            }
-            else
-            {
-                Screen.window = window;
-            }
-        }
+        public static GameWindow Window = null;
+        public static GraphicsDevice GraphicsDevice = null;
+        public static SpriteFont Font = null;
+        public static int Height => Window.ClientBounds.Height;
+        public static int Width => Window.ClientBounds.Width;
     }
 }

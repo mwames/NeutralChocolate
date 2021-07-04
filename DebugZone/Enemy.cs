@@ -33,5 +33,9 @@ namespace DebugZone
             Vector3 pos = Vector3.Transform(Position, view);
             spriteBatch.Draw(Texture, new Vector2(pos.X, pos.Y), Color.White);
         }
+
+        public void Attack(NeutralChocolate.IEntity target) {
+            
+        }
     }
 }
