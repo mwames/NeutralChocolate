@@ -54,6 +54,8 @@ namespace DebugZone
 
             textBox = new TextBox("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dolor morbi non arcu risus quis varius quam quisque. Dignissim diam quis enim lobortis scelerisque. Tortor pretium viverra suspendisse potenti nullam. Aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed. Massa ultricies mi quis hendrerit dolor magna eget est lorem. Nulla pharetra diam sit amet nisl. Dapibus ultrices in iaculis nunc sed augue lacus viverra vitae. Bibendum at varius vel pharetra vel turpis nunc eget. Libero justo laoreet sit amet cursus sit amet. Quam lacus suspendisse faucibus interdum posuere lorem ipsum. Egestas dui id ornare arcu. Pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl. Porta lorem mollis aliquam ut porttitor leo a diam sollicitudin. Elementum facilisis leo vel fringilla est. Pellentesque dignissim enim sit amet venenatis urna. Neque gravida in fermentum et sollicitudin. Non curabitur gravida arcu ac tortor dignissim. Dui faucibus in ornare quam viverra orci sagittis eu volutpat. Orci dapibus ultrices in iaculis.", Position.Top);
 
+            UI.Add(textBox);
+
             humans.Add(new Human(model, Vector3.Zero));
             humans.Add(new Human(model, new Vector3(-10, 0, 0)));
             humans.Add(new Human(model, new Vector3(10, 0, 0)));
@@ -64,6 +66,7 @@ namespace DebugZone
 
         protected override void Update(GameTime gameTime)
         {
+            UI.Update();
             var kb = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
@@ -71,7 +74,6 @@ namespace DebugZone
             }
 
             camera.Update();
-            textBox.Update();
 
             foreach (Human human in humans)
             {
@@ -110,7 +112,7 @@ namespace DebugZone
             // spriteBatch.End();
 
             spriteBatch.Begin();
-            textBox.Draw(spriteBatch);
+            UI.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

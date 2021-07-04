@@ -11,7 +11,7 @@ namespace DebugZone
         Bottom,
         Top
     }
-    public class TextBox {
+    public class TextBox : IScreenEntity {
         // Constants
         public const int WIDTH = 800;
         public const int HEIGHT = 150;
@@ -24,6 +24,9 @@ namespace DebugZone
         public Texture2D Texture { get; set; }
         public Texture2D Vertical { get; set; }
         public Texture2D Horizontal { get; set; }
+
+        // IDK about all this shit.
+        public bool endOfMessage = false;
         public string[] lines { get; set; }
         public int currentLine { get; set; } = 0;
         private KeyboardState previous = Keyboard.GetState();
@@ -99,9 +102,25 @@ namespace DebugZone
             current = Keyboard.GetState();
 
             if (previous.IsKeyDown(Keys.Space) && !current.IsKeyDown(Keys.Space)) {
-                if (currentLine + MAX_ROWS_TEXT < lines.Length) {
-                    currentLine += MAX_ROWS_TEXT;
+                if (!endOfMessage) {
+                    updateDisplayedLines();
                 }
+                else
+                {
+                    UI.Delete(this);
+                }
+            }
+        }
+
+        private void updateDisplayedLines() {
+            if (currentLine + MAX_ROWS_TEXT <= lines.Length)
+            {
+                currentLine += MAX_ROWS_TEXT;
+            }
+
+            if (currentLine + MAX_ROWS_TEXT > lines.Length)
+            {
+                endOfMessage = true;
             }
         }
 
@@ -123,18 +142,17 @@ namespace DebugZone
             spriteBatch.Draw(Horizontal, new Vector2(position.X, position.Y + HEIGHT), Color.White);
 
             // Draw Message
-            var linesToDraw = selectLines(currentLine, currentLine + MAX_ROWS_TEXT);
+            var linesToDraw = ArrayHelper.Take<string>(currentLine, MAX_ROWS_TEXT, lines);
             drawLines(spriteBatch, linesToDraw);
-        }
 
-        private string[] selectLines(int startIndex, int endIndex)
-        {
-            var length = (endIndex > lines.Length)
-                ? lines.Length - startIndex
-                : endIndex - startIndex;
-            string[] copy = new string[length];
-            Array.Copy(lines, startIndex, copy, 0, length);
-            return copy;
+            // Draw end icon
+            if (endOfMessage) {
+                var endMessage = "END";
+                var endDimensions = Screen.Font.MeasureString(endMessage);
+                var endX = (position.X + WIDTH) - endDimensions.X - 20;
+                var endY = (position.Y + WIDTH) - endDimensions.Y - 20;
+                spriteBatch.DrawString(Screen.Font, "END", new Vector2(endX, endY), Color.White);
+            }
         }
 
         private void drawLines(SpriteBatch spriteBatch, string[] toDraw) {

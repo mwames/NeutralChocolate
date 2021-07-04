@@ -10,7 +10,7 @@ namespace NeutralChocolate
         [STAThread]
         static void Main(string[] args)
         {                
-            using (var game = args.Contains("debug") ? (Game)new DebugZone.DebugZone() : new NeutralChocolate())
+            using (var game = (Game)new DebugZone.DebugZone())
             {
                 Game = game;
                 game.Run();
