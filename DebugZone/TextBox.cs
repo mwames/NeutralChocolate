@@ -149,8 +149,8 @@ namespace DebugZone
             if (endOfMessage) {
                 var endMessage = "END";
                 var endDimensions = Screen.Font.MeasureString(endMessage);
-                var endX = (position.X + WIDTH) - endDimensions.X - 20;
-                var endY = (position.Y + WIDTH) - endDimensions.Y - 20;
+                var endX = (position.X + WIDTH) - endDimensions.X - 10;
+                var endY = (position.Y + HEIGHT) - endDimensions.Y - 5;
                 spriteBatch.DrawString(Screen.Font, "END", new Vector2(endX, endY), Color.White);
             }
         }
